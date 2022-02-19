@@ -5,7 +5,10 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
 
 export const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
+    [theme.breakpoints.down('md')]: {
+        justifyContent: 'space-between'
+    }
 }));
 
 export const ContainerStyled = styled(Container)(({ theme }) => ({
@@ -62,7 +65,7 @@ export const PageTypography = styled(Typography)(({ theme }) => ({
 export const SideBox = styled(Box)(({ theme, isOpen }) => ({
     paddingTop: '32px',
     height: '100vh',
-    width: !isOpen ? '59px' : '250px',
+    width: !isOpen ? '59px' : '150px',
     borderTop: !isOpen && `1px solid ${theme.palette.secondary.light}`,
     backgroundColor: theme.palette.secondary.dark,
 
@@ -100,7 +103,7 @@ export const StyledIcon = styled(SvgIcon)(({ theme }) => ({
     color: theme.palette.secondary.light
 }));
 
-export const SideLinkText = styled(Typography)(({ theme, isOpen }) => ({
+export const SideLinkText = styled(({ isOpen, ...rest }) => <Typography {...rest} />)(({ theme, isOpen }) => ({
     color: theme.palette.secondary.light,
     display: isOpen ? 'flex' : 'none',
     fontWeight: '100'

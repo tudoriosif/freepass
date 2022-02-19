@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SideBox } from './styles';
 import { Stack } from '@mui/material';
 import GridViewIcon from '@mui/icons-material/GridView';
@@ -8,8 +8,13 @@ import RadarIcon from '@mui/icons-material/Radar';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SideBarLink from './SideBarLink';
+import { useSelector } from 'react-redux';
 
 const SideBar = () => {
+    const {
+        nav: { isOpen }
+    } = useSelector((state) => state.style);
+
     const list = [
         { text: 'Dashboard', Icon: GridViewIcon },
         { text: 'Devices', Icon: LinkedCameraIcon },
@@ -18,8 +23,6 @@ const SideBar = () => {
         { text: 'Roles', Icon: PersonAddAlt1Icon },
         { text: 'Settings', Icon: SettingsIcon }
     ];
-
-    const [isOpen, setOpen] = useState(false);
 
     return (
         <SideBox isOpen={isOpen}>

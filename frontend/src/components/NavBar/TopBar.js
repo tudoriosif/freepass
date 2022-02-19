@@ -13,36 +13,23 @@ import {
     LogoBox,
     FingerPrintIcon
 } from './styles';
+import { useDispatch } from 'react-redux';
+import { switchNav } from '../../redux/slices/styleSlice';
 
 const mockSystemId = 'FreePass - 001';
 const mockCurrentPage = 'Dashboard';
 
 const TopBar = () => {
     const navigate = useNavigate();
-    const [anchorElNav, setAnchorElNav] = useState(null);
-    const [anchorElUser, setAnchorElUser] = useState(null);
+    const dispatch = useDispatch();
 
-    const handleOpenNavMenu = (event) => {
-        setAnchorElNav(event.currentTarget);
-    };
-    const handleOpenUserMenu = (event) => {
-        setAnchorElUser(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
-    };
-
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
-    };
     return (
         <AppBarStyled position="static">
             <ContainerStyled maxWidth={false} disableGutters>
                 <ToolbarStyled disableGutters>
                     <Tooltip title="Open/close menu">
                         <LogoBox>
-                            <IconButton onClick={(event) => event.preventDefault()} sx={{ p: 0 }}>
+                            <IconButton onClick={() => dispatch(switchNav())} sx={{ p: 0 }}>
                                 <FingerPrintIcon light="true" />
                             </IconButton>
                         </LogoBox>
@@ -65,12 +52,14 @@ const TopBar = () => {
                             </SystemText>
                         </Tooltip>
                         <Tooltip title="Change Layout">
-                            <IconButton onClick={() => console.log('LayoutChanged')} sx={{ p: 0, mr: 6 }}>
+                            <IconButton
+                                onClick={() => console.log('LayoutChanged')}
+                                sx={{ p: 0, mr: { xs: 4, md: 6 } }}>
                                 <LayoutIcon />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={() => navigate('/profile')} sx={{ p: 0, mr: 10 }}>
+                            <IconButton onClick={() => navigate('/profile')} sx={{ p: 0, mr: { xs: 4, md: 10 } }}>
                                 <AccountIcon />
                             </IconButton>
                         </Tooltip>
