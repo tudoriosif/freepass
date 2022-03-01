@@ -1,12 +1,13 @@
 import React from 'react';
 import { Box } from '@mui/system';
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import HeroIcon from '../../assets/hero-icon.svg';
+import { RightText, RightBox } from './styles';
 
 const RightHero = () => {
     return (
-        <Box sx={{ bgcolor: '#393e41', height: '100vh', width: '50%' }}>
-            <Stack>
+        <RightBox>
+            <Stack alignItems="center">
                 <Box
                     component="img"
                     sx={{
@@ -20,12 +21,13 @@ const RightHero = () => {
                     alt="Multimodal"
                     src={HeroIcon}
                 />
-                <Typography variant="h3" noWrap component="div">
+                <RightText variant="h5" noWrap component="div" textAlign="center">
                     {' '}
-                    Multimodal biometric authentication system
-                </Typography>
+                    Surveillance App <br /> with <br />
+                    Multimodal biometric <br /> authentication system
+                </RightText>
             </Stack>
-        </Box>
+        </RightBox>
     );
 };
 

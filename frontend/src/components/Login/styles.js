@@ -1,10 +1,13 @@
-import { Button, Container, Input, InputLabel, Link, Stack, Typography, Box } from '@mui/material';
+import { Button, Container, Input, InputLabel, Link, Stack, Typography, Box, Avatar } from '@mui/material';
 import { styled } from '@mui/system';
 
-export const LoginContainer = styled(Container)(({ theme }) => ({
+export const SplitContainer = styled(Container)(({ theme }) => ({
     width: '100%',
     height: '100vh',
-    display: 'flex'
+    display: 'flex',
+    [theme.breakpoints.down('md')]: {
+        flexDirection: 'column'
+    }
 }));
 
 export const LoginInput = styled(Input)(({ theme }) => ({
@@ -87,5 +90,41 @@ export const UnderLink = styled(Link)(({ theme }) => ({
 export const FormBox = styled(Box)(({ theme }) => ({
     height: '100vh',
     width: '50%',
-    paddingTop: '15vh'
+    paddingTop: '15vh',
+    [theme.breakpoints.down('md')]: {
+        paddingTop: '3vh',
+        marginBottom: '3vh',
+        width: '100%'
+    }
+}));
+
+export const RightText = styled(Typography)(({ theme }) => ({
+    textAlign: 'center',
+    color: theme.palette.secondary.light,
+    fontWeight: theme.typography.fontWeightLight
+}));
+
+export const RightBox = styled(({ isLight, ...rest }) => <Box {...rest} />)(({ theme, isLight }) => ({
+    backgroundColor: isLight ? theme.palette.secondary.light : theme.palette.secondary.dark,
+    height: '100vh',
+    width: '50%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+        width: '100%',
+        height: '50vh'
+    }
+}));
+
+export const Circle = styled(({ isLight, ...rest }) => <Avatar {...rest} />)(({ theme, isLight }) => ({
+    backgroundColor: isLight ? theme.palette.secondary.dark : theme.palette.secondary.light,
+    color: isLight ? theme.palette.secondary.light : theme.palette.secondary.dark,
+    width: '15vw',
+    height: '15vw',
+    minWidth: '150px',
+    minHeight: '150px',
+    maxWidth: '300px',
+    maxHeight: '300px'
 }));

@@ -15,6 +15,10 @@ export const ContainerStyled = styled(Container)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.main
 }));
 
+export const ContainerStyledDark = styled(Container)(({ theme }) => ({
+    backgroundColor: theme.palette.secondary.dark
+}));
+
 export const AppBarStyled = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.main,
     boxShadow: 'none'

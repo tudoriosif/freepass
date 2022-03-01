@@ -116,10 +116,7 @@ const LeftForm = () => {
                 </form>
                 <LoginStack direction="row" sx={{ justifyContent: 'center' }}>
                     <UnderText>Don&apos;t have an account? </UnderText>
-                    <UnderLink
-                        component="div"
-                        sx={{ ml: 1, display: { xs: 'none', md: 'block' } }}
-                        onClick={() => navigate('/specs')}>
+                    <UnderLink component="div" sx={{ ml: 1 }} onClick={() => navigate('/specs')}>
                         Sign up
                     </UnderLink>
                 </LoginStack>
