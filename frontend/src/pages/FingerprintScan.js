@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { InfoText, CircularProgressDark, FingerBox } from '../components/Fingerprint/styles';
+import { InfoText, CircularProgressDark, FingerBox } from '../components/Biometrics/styles';
 import { ContainerStyled } from '../components/NavBar/styles';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { useNavigate } from 'react-router-dom';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 const FingerprintScan = () => {
+    // Condition if login is passed to be added
     const [loading, setLoading] = useState(false);
-    const [scan, setScan] = useState(false);
+    const [scan, setScan] = useState(true);
     const [faceScan, setFaceScan] = useState(null);
 
     const navigate = useNavigate();
 
     // Redirect on success
-    // useEffect(() => {
-    //     if (scan) {
-    //         setTimeout(() => {
-    //             faceScan ? navigate('/dashboard') : navigate('/facial-recognition');
-    //         }, 5000);
-    //     }
-    // }, [scan]);
+    useEffect(() => {
+        if (scan) {
+            setTimeout(() => {
+                faceScan ? navigate('/dashboard') : navigate('/face-recognition');
+            }, 5000);
+        }
+    }, [scan]);
 
     return (
         <ContainerStyled

@@ -2,16 +2,16 @@ import React from 'react';
 import LeftForm from '../components/Login/LeftForm';
 import RightHero from '../components/Login/RightHero';
 import { SplitContainer } from '../components/Login/styles';
-import { loginPageDetails } from '../constants/constants';
+import { registerPageDetails } from '../constants/constants';
 
-const Login = () => {
-    const submitHandler = (values) => alert(values);
+const SignUp = () => {
+    const submitHandler = (values) => console.log(values);
     return (
         <SplitContainer disableGutters maxWidth={false}>
-            <LeftForm pageDetails={loginPageDetails} submitHandler={submitHandler} />
+            <LeftForm pageDetails={registerPageDetails} submitHandler={submitHandler} />
             <RightHero />
         </SplitContainer>
     );
 };
 
-export default Login;
+export default SignUp;

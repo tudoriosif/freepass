@@ -1,17 +1,35 @@
 import React from 'react';
 import './App.css';
-import NavBar from './components/NavBar';
 import Login from './pages/Login';
 import Multimodal from './pages/MultimodalAccess';
 import theme from './constants/theme';
 import { ThemeProvider } from '@mui/system';
 import FingerprintScan from './pages/FingerprintScan';
+import FaceRecognition from './pages/FaceRecognition';
+import { Routes, Route } from 'react-router-dom';
+import SignUp from './pages/SignUp';
+import NavLayout from './utils/NavLayout';
+import Dashboard from './pages/Dashboard';
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
             <div className="App">
-                <FingerprintScan />
+                <Routes>
+                    <Route path="/" element={<Login />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/multimodal" element={<Multimodal />} />
+                    <Route path="/face-recognition" element={<FaceRecognition />} />
+                    <Route path="/fingerprint-scan" element={<FingerprintScan />} />
+                    <Route element={<NavLayout />}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/devices" element={<Dashboard />} />
+                        <Route path="/live" element={<Dashboard />} />
+                        <Route path="/events" element={<Dashboard />} />
+                        <Route path="/roles" element={<Dashboard />} />
+                        <Route path="/settings" element={<Dashboard />} />
+                    </Route>
+                </Routes>
             </div>
         </ThemeProvider>
     );

@@ -11,7 +11,11 @@ const SideBarLink = ({ text, Icon, to, isOpen }) => {
             <IconButton sx={{ p: 0 }} onClick={() => navigate(to || `/${text.toLowerCase()}`)}>
                 <StyledIcon component={Icon} />
             </IconButton>
-            <SideLinkText variant="h7" component="div" isOpen={isOpen}>
+            <SideLinkText
+                variant="h7"
+                component="div"
+                isOpen={isOpen}
+                onClick={() => navigate(to || `/${text.toLowerCase()}`)}>
                 {text}
             </SideLinkText>
         </SideLinkBox>

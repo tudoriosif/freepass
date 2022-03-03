@@ -1,5 +1,4 @@
 import React from 'react';
-import { Box } from '@mui/system';
 import { useFormik } from 'formik';
 import validationSchema from './formValidationSchema';
 import { Stack, FormControl, FormHelperText, Link, IconButton, Typography } from '@mui/material';
@@ -19,7 +18,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { FingerPrintIcon } from '../NavBar/styles';
 
-const LeftForm = () => {
+const LeftForm = ({ pageDetails, submitHandler }) => {
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -28,9 +27,7 @@ const LeftForm = () => {
             systemID: ''
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2));
-        }
+        onSubmit: (values) => submitHandler(values)
     });
 
     return (
@@ -43,8 +40,8 @@ const LeftForm = () => {
                     <LogoHeader component="div">FreePass</LogoHeader>
                 </LoginStack>
                 <LoginStack spacing={1}>
-                    <LoginHeader component="div">Log in</LoginHeader>
-                    <LoginSubHeader component="div">Welcome back! Please enter your details.</LoginSubHeader>
+                    <LoginHeader component="div">{pageDetails.name}</LoginHeader>
+                    <LoginSubHeader component="div">{pageDetails.subHeader}</LoginSubHeader>
                 </LoginStack>
                 <form onSubmit={formik.handleSubmit} style={{ display: 'flex', justifyContent: 'center' }}>
                     <LoginStack spacing={4}>
@@ -110,14 +107,14 @@ const LeftForm = () => {
                             Forgot password?
                         </ForgotLink>
                         <SubmitButton color="primary" variant="contained" fullWidth type="submit">
-                            Sign in
+                            {pageDetails.btnText}
                         </SubmitButton>
                     </LoginStack>
                 </form>
                 <LoginStack direction="row" sx={{ justifyContent: 'center' }}>
-                    <UnderText>Don&apos;t have an account? </UnderText>
-                    <UnderLink component="div" sx={{ ml: 1 }} onClick={() => navigate('/specs')}>
-                        Sign up
+                    <UnderText>{pageDetails.underText}</UnderText>
+                    <UnderLink component="div" sx={{ ml: 1 }} onClick={() => navigate(pageDetails.linkTo)}>
+                        {pageDetails.underLink}
                     </UnderLink>
                 </LoginStack>
             </Stack>

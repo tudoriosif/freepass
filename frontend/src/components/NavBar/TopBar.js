@@ -47,7 +47,7 @@ const TopBar = () => {
                                 variant="h6"
                                 component="div"
                                 sx={{ mr: 6, display: { xs: 'none', md: 'flex' } }}
-                                onClick={() => navigate('/specs')}>
+                                onClick={() => navigate('/devices')}>
                                 {mockSystemId}
                             </SystemText>
                         </Tooltip>
@@ -59,7 +59,7 @@ const TopBar = () => {
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Open settings">
-                            <IconButton onClick={() => navigate('/profile')} sx={{ p: 0, mr: { xs: 4, md: 10 } }}>
+                            <IconButton onClick={() => navigate('/settings')} sx={{ p: 0, mr: { xs: 4, md: 10 } }}>
                                 <AccountIcon />
                             </IconButton>
                         </Tooltip>
