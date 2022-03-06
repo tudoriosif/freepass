@@ -15,3 +15,12 @@ export const registerPageDetails = {
     underLink: 'Sign in',
     linkTo: '/'
 };
+
+export const ROLES = {
+    MAIN: 'MAIN',
+    SUB: 'SUB'
+};
+
+export const ERRORS = {
+    ROLE: 'You do not have the right access for this page'
+};

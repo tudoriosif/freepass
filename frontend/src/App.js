@@ -10,6 +10,8 @@ import { Routes, Route } from 'react-router-dom';
 import SignUp from './pages/SignUp';
 import NavLayout from './utils/NavLayout';
 import Dashboard from './pages/Dashboard';
+import ProtectedRoute from './utils/ProtectedRoute';
+import { ROLES } from './constants/constants';
 
 function App() {
     return (
@@ -22,12 +24,18 @@ function App() {
                     <Route path="/face-recognition" element={<FaceRecognition />} />
                     <Route path="/fingerprint-scan" element={<FingerprintScan />} />
                     <Route element={<NavLayout />}>
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/devices" element={<Dashboard />} />
-                        <Route path="/live" element={<Dashboard />} />
-                        <Route path="/events" element={<Dashboard />} />
-                        <Route path="/roles" element={<Dashboard />} />
-                        <Route path="/settings" element={<Dashboard />} />
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/dashboard" element={<Dashboard />} />
+                            <Route path="/live" element={<Dashboard />} />
+                            <Route path="/events" element={<Dashboard />} />
+                            <Route path="/settings" element={<Dashboard />} />
+                        </Route>
+                    </Route>
+                    <Route element={<NavLayout />}>
+                        <Route element={<ProtectedRoute roles={[ROLES.MAIN]} />}>
+                            <Route path="/devices" element={<Dashboard />} />
+                            <Route path="/roles" element={<Dashboard />} />
+                        </Route>
                     </Route>
                 </Routes>
             </div>
