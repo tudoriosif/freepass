@@ -12,5 +12,4 @@ router.put('/:id', crudService.updateObject(System));
 
 router.delete('/:id', crudService.deleteObject(System));
 
-
 export default router;

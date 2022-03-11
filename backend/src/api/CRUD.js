@@ -37,13 +37,13 @@ export const updateObject = (model) => async (req, res, next) => {
         return res.status(200).json({
             message: `${model.modelName} updated`,
             data: doc
-        });;
+        });
     } catch (error) {
         throw new Error(error.message);
     }
 };
 
-export const deleteObject =(model) => async (req, res, next) => {
+export const deleteObject = (model) => async (req, res, next) => {
     try {
         const { id } = req.params;
         const doc = await model.deleteOne({ _id: id });
@@ -55,7 +55,7 @@ export const deleteObject =(model) => async (req, res, next) => {
         return res.status(204).json({
             message: `${model.modelName} deleted`,
             data: doc
-        });;
+        });
     } catch (error) {
         throw new Error(error.message);
     }

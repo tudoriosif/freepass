@@ -5,25 +5,31 @@ import { CircularProgressDark, FaceOval, InfoText, PhotoButton } from '../compon
 import { ContainerStyled } from '../components/NavBar/styles';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { useDispatch } from 'react-redux';
+import { sendPhoto } from '../redux/slices/photoSlice';
+
+const videoConstraints = {
+    width: 1280,
+    height: 720
+};
 
 const FaceRecognition = () => {
     // Condition if login is passed to be added
     const webcamRef = useRef(null);
-    const [imageSrc, setImageSrc] = useState(null);
+
     const [loading, setLoading] = useState(true);
     const [scan, setScan] = useState(null);
     const [fingerScan, setFingerScan] = useState(true);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const capture = useCallback(() => {
         setTimeout(() => {
-            const imgSrc = webcamRef.current.getScreenshot();
-            // Send this to backend
-            setImageSrc(imgSrc);
+            const photoBase64 = webcamRef.current.getScreenshot();
             setScan(true);
             setLoading(false);
-            console.log(imgSrc, scan, loading);
+            dispatch(sendPhoto({ photoBase64 }));
         }, 3000);
     }, [webcamRef]);
 
@@ -44,7 +50,14 @@ const FaceRecognition = () => {
                 maxWidth="md"
                 disableGutters
                 sx={{ height: '50vh', minHeight: '350px', position: 'relative' }}>
-                <Webcam audio={false} height="100%" width="100%" ref={webcamRef} />
+                <Webcam
+                    audio={false}
+                    height="100%"
+                    width="100%"
+                    ref={webcamRef}
+                    screenshotFormat="image/jpeg"
+                    videoConstraints={videoConstraints}
+                />
                 <FaceOval />
             </ContainerStyled>
             <ContainerStyled
