@@ -19,14 +19,15 @@ export const loginUser = async (req, res, next) => {
             }
 
             const payload = {
-                userID: user._id || user.id,
+                id: user._id || user.id,
                 email: user.email,
-                systemID: user.systemID
+                systemID: user.systemID.systemID,
+                role: user.mainUser ? 'SUB' : 'MAIN'
             };
 
             const token = jwt.sign({ user: payload }, config.secretKey);
 
-            return res.status(200).json({ token, payload });
+            return res.status(200).json({ token, ...payload });
         });
     })(req, res, next); // auto-invoke
 };
@@ -37,11 +38,9 @@ export const signupUser = async (req, res, next) => {
     try {
         const system = await checkSystem(systemID);
         if (!system)
-            return res
-                .status(400)
-                .json({
-                    error: 'Please provide a valid System ID or contact Main user to add a new account on this system'
-                });
+            return res.status(400).json({
+                error: 'Please provide a valid System ID or contact Main user to add a new account on this system'
+            });
         if (!(email && password)) return res.status(400).json({ error: 'Please provide an email & password!' });
 
         const existingUser = await User.findOne({ email });

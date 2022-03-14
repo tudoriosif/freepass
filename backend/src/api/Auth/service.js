@@ -7,9 +7,9 @@ import config from '../../config/config';
 
 passport.use(
     'login',
-    new LocalStrategy(async (email, password, done) => {
+    new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, async (email, password, done) => {
         try {
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ email }).populate('mainUser systemID');
 
             if (!user) {
                 return done(null, false, { message: 'User not found!' });
@@ -48,9 +48,7 @@ export const checkSystem = async (systemID) => {
     const existingSystem = await System.findOne({ systemID });
     const existingUser = await User.findOne({ systemID: existingSystem._id }).populate('systemID');
 
-    console.log(existingUser);
-
-    return  !existingUser && existingSystem;
+    return !existingUser && existingSystem;
 };
 
 export default passport;

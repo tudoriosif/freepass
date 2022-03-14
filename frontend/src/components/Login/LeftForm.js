@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import validationSchema from './formValidationSchema';
 import { Stack, FormControl, FormHelperText, Link, IconButton, Typography } from '@mui/material';
 import {
     LoginInput,
@@ -17,8 +16,9 @@ import {
 } from './styles';
 import { useNavigate } from 'react-router-dom';
 import { FingerPrintIcon } from '../NavBar/styles';
+import { useSelector } from 'react-redux';
 
-const LeftForm = ({ pageDetails, submitHandler }) => {
+const LeftForm = ({ pageDetails, submitHandler, validationSchema }) => {
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -29,6 +29,8 @@ const LeftForm = ({ pageDetails, submitHandler }) => {
         validationSchema: validationSchema,
         onSubmit: (values) => submitHandler(values)
     });
+
+    const error = useSelector((state) => state.user.error);
 
     return (
         <FormBox>
@@ -106,6 +108,13 @@ const LeftForm = ({ pageDetails, submitHandler }) => {
                             onClick={() => navigate('/specs')}>
                             Forgot password?
                         </ForgotLink>
+                        {error && (
+                            <ForgotLink
+                                component="div"
+                                sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center', color: 'red' }}>
+                                {error}
+                            </ForgotLink>
+                        )}
                         <SubmitButton color="primary" variant="contained" fullWidth type="submit">
                             {pageDetails.btnText}
                         </SubmitButton>
