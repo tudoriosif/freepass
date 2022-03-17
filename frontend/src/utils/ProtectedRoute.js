@@ -8,7 +8,7 @@ const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
     const user = useSelector((state) => state.user);
     const location = useLocation();
 
-    if (!user.token) {
+    if (!user.token && !localStorage.getItem('token')) {
         // checking token needs to be added
         return <Navigate to="/" state={{ from: location }} />;
     }

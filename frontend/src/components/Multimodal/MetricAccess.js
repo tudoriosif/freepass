@@ -4,11 +4,11 @@ import { Circle, RightBox } from '../Login/styles';
 import FaceScan from '../../assets/face-scan.svg';
 import { useNavigate } from 'react-router-dom';
 
-const MetricAccess = ({ isLight, ProvidedIcon, to }) => {
+const MetricAccess = ({ isLight, ProvidedIcon, to, state }) => {
     const navigate = useNavigate();
     return (
         <RightBox isLight={isLight}>
-            <IconButton onClick={() => navigate(to)}>
+            <IconButton onClick={() => navigate(to, { state })}>
                 <Circle isLight={isLight}>
                     {ProvidedIcon ? (
                         <ProvidedIcon sx={{ fontSize: 'clamp(75px, 7vw, 150px)' }} />

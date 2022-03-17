@@ -14,11 +14,11 @@ import {
     UnderLink,
     FormBox
 } from './styles';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { FingerPrintIcon } from '../NavBar/styles';
 import { useSelector } from 'react-redux';
 
-const LeftForm = ({ pageDetails, submitHandler, validationSchema }) => {
+const LeftForm = ({ pageDetails, submitHandler, validationSchema, isLogin }) => {
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -31,6 +31,12 @@ const LeftForm = ({ pageDetails, submitHandler, validationSchema }) => {
     });
 
     const error = useSelector((state) => state.user.error);
+    const token = useSelector((state) => state.user.token);
+    const location = useLocation();
+
+    if (isLogin && token) {
+        return <Navigate to="/multimodal" state={{ prevPath: location.pathname }} />;
+    }
 
     return (
         <FormBox>
@@ -84,24 +90,26 @@ const LeftForm = ({ pageDetails, submitHandler, validationSchema }) => {
                                 </FormHelperText>
                             )}
                         </FormControl>
-                        <FormControl>
-                            <LoginInputLabel htmlFor="systemID" shrink={true} variant="standard">
-                                System ID
-                            </LoginInputLabel>
-                            <LoginInput
-                                id="systemID"
-                                placeholder={'Enter your provided System ID'}
-                                onChange={formik.handleChange}
-                                disableUnderline
-                            />
-                            {!!(formik.touched.systemID && formik.errors.systemID) && (
-                                <FormHelperText
-                                    id="my-helper-text"
-                                    error={formik.touched.systemID && Boolean(formik.errors.systemID)}>
-                                    {formik.errors.systemID}
-                                </FormHelperText>
-                            )}
-                        </FormControl>
+                        {!isLogin && (
+                            <FormControl>
+                                <LoginInputLabel htmlFor="systemID" shrink={true} variant="standard">
+                                    System ID
+                                </LoginInputLabel>
+                                <LoginInput
+                                    id="systemID"
+                                    placeholder={'Enter your provided System ID'}
+                                    onChange={formik.handleChange}
+                                    disableUnderline
+                                />
+                                {!!(formik.touched.systemID && formik.errors.systemID) && (
+                                    <FormHelperText
+                                        id="my-helper-text"
+                                        error={formik.touched.systemID && Boolean(formik.errors.systemID)}>
+                                        {formik.errors.systemID}
+                                    </FormHelperText>
+                                )}
+                            </FormControl>
+                        )}
                         <ForgotLink
                             component="div"
                             sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end' }}

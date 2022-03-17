@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Webcam from 'react-webcam';
 import { CircularProgressDark, FaceOval, InfoText, PhotoButton } from '../components/Biometrics/styles';
 import { ContainerStyled } from '../components/NavBar/styles';
@@ -23,13 +23,20 @@ const FaceRecognition = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
+    const isSignup = location.state;
 
     const capture = useCallback(() => {
+        for (let i = isSignup ? 12 : 1; i--; ) {
+            // If sign up then collect training data
+            setTimeout(() => {
+                const photoBase64 = webcamRef.current.getScreenshot();
+                dispatch(sendPhoto({ photoBase64 }));
+            }, 150);
+        }
         setTimeout(() => {
-            const photoBase64 = webcamRef.current.getScreenshot();
             setScan(true);
             setLoading(false);
-            dispatch(sendPhoto({ photoBase64 }));
         }, 3000);
     }, [webcamRef]);
 

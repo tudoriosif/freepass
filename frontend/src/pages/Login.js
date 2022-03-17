@@ -13,7 +13,12 @@ const Login = () => {
     const submitHandler = (values) => dispatch(login(values));
     return (
         <SplitContainer disableGutters maxWidth={false}>
-            <LeftForm pageDetails={loginPageDetails} submitHandler={submitHandler} validationSchema={loginSchema} />
+            <LeftForm
+                pageDetails={loginPageDetails}
+                submitHandler={submitHandler}
+                validationSchema={loginSchema}
+                isLogin
+            />
             <RightHero />
         </SplitContainer>
     );

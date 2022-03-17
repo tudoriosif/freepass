@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { login } from '../thunks/user';
+import { login, register } from '../thunks/user';
 
 const initialState = {
     id: null,
@@ -16,14 +16,21 @@ const userSlice = createSlice({
     reducers: {},
     extraReducers: {
         [login.fulfilled]: (state, action) => {
+            localStorage.setItem('token', action.payload.token);
             return { ...action.payload, error: '' };
         },
         [login.rejected]: (state, action) => {
+            state.error = action.payload.error;
+        },
+        [register.fulfilled]: (state, action) => {
+            return { ...action.payload, error: '' };
+        },
+        [register.rejected]: (state, action) => {
             state.error = action.payload.error;
         }
     }
 });
 
-export { login };
+export { login, register };
 
 export default userSlice.reducer;
