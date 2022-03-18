@@ -14,7 +14,7 @@ const MultimodalAccess = () => {
             <MetricAccess
                 isLight
                 to="/face-recognition"
-                state={{ isSignup: location?.state?.prevPath === '/' ? true : false }}
+                state={{ isSignup: location?.state?.prevPath !== '/' ? true : false }}
             />
         </SplitContainer>
     );

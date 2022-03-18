@@ -6,7 +6,7 @@ import { ContainerStyled } from '../components/NavBar/styles';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { useDispatch } from 'react-redux';
-import { sendPhoto } from '../redux/slices/photoSlice';
+import { sendPhoto, checkPhoto } from '../redux/slices/photoSlice';
 
 const videoConstraints = {
     width: 1280,
@@ -24,14 +24,15 @@ const FaceRecognition = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-    const isSignup = location.state;
+    const { isSignup } = location.state;
+    const action = isSignup ? sendPhoto : checkPhoto;
 
     const capture = useCallback(() => {
         for (let i = isSignup ? 12 : 1; i--; ) {
             // If sign up then collect training data
             setTimeout(() => {
                 const photoBase64 = webcamRef.current.getScreenshot();
-                dispatch(sendPhoto({ photoBase64 }));
+                dispatch(action({ photoBase64 }));
             }, 150);
         }
         setTimeout(() => {
