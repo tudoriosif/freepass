@@ -1,6 +1,7 @@
 import ImageDataURI from 'image-data-uri';
 import fs from 'fs';
 import { nanoid5 } from '../../config/nanoid';
+import { facePy, pyFace } from './service';
 
 export const storeTrainPhoto = async (req, res, next) => {
     try {
@@ -34,9 +35,14 @@ export const checkPhoto = async (req, res, next) => {
         }
 
         const fileName = fs.readdirSync(`./src/faces/${email}/check`);
-        const lastFileNum = fileName.map((file) => +file.replace(/\.[^/.]+$/, '')).sort((a, b) => b - a)[0];
+        const lastFileNum = fileName.map((file) => +file.replace(/\.[^/.]+$/, '')).sort((a, b) => b - a)[0] || 0;
 
-        await ImageDataURI.outputFile(photoBase64, `${path}/${lastFileNum+1}.jpg`);
+        await ImageDataURI.outputFile(photoBase64, `${path}/${lastFileNum + 1}.jpg`);
+
+        // Call python face detection
+        const results = await pyFace(`${path}/${lastFileNum + 1}.jpg`); // this needs to be changed after save photo in +1
+
+        console.log(results);
 
         return res.status(200).json({ message: 'Everything went ok!' });
     } catch (error) {
