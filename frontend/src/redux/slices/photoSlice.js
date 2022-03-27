@@ -17,12 +17,12 @@ const photoSlice = createSlice({
             state.error = '';
             state.message = '';
         },
-        [checkPhoto.fulfilled]: (state, action) => {
+        [sendPhoto.fulfilled]: (state, action) => {
             state.message = action.payload?.message;
             state.loading = false;
             state.error = '';
         },
-        [checkPhoto.rejected]: (state, action) => {
+        [sendPhoto.rejected]: (state, action) => {
             state.error = action.payload?.error;
             state.loading = false;
             state.message = '';

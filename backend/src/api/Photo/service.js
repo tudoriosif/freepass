@@ -1,17 +1,25 @@
-import { spawn } from 'child_process';
+import { spawnSync } from 'child_process';
 
 export const pyFace = (pathImage) => {
     return new Promise((resolve, reject) => {
-        try {
-            console.log('hERE2');
-            const runScript = spawn('python', ['./src/scripts/face.py', pathImage]);
-
-            runScript.stdout.on('data', (data) => resolve(data.toString()));
-            runScript.on('error', (error) => {
-                throw new Error(error);
-            });
-        } catch (error) {
-            reject(error);
+        const runScript = spawnSync('python', ['./src/scripts/test_image.py', pathImage]);
+        const { stdout: data, stderr: error } = runScript;
+        if (error.toString().length > 0) {
+            reject(error.toString());
         }
+
+        resolve(JSON.parse(data.toString()));
+    });
+};
+
+export const pyTrain = (pathImage) => {
+    return new Promise((resolve, reject) => {
+        const runScript = spawnSync('python', ['./src/scripts/train_model.py', pathImage]);
+        const { stdout: data, stderr: error } = runScript;
+        if (error.toString().length > 0) {
+            reject(error.toString());
+        }
+
+        resolve(data.toString());
     });
 };

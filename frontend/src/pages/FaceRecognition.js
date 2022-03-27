@@ -5,8 +5,9 @@ import { CircularProgressDark, FaceOval, InfoText, PhotoButton } from '../compon
 import { ContainerStyled } from '../components/NavBar/styles';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { sendPhoto, checkPhoto } from '../redux/slices/photoSlice';
+import { takePhotos } from '../utils/utils';
 
 const videoConstraints = {
     width: 1280,
@@ -16,10 +17,14 @@ const videoConstraints = {
 const FaceRecognition = () => {
     // Condition if login is passed to be added
     const webcamRef = useRef(null);
+    const isMounted = useRef(false);
 
-    const [loading, setLoading] = useState(true);
-    const [scan, setScan] = useState(null);
-    const [fingerScan, setFingerScan] = useState(true);
+    const [photosArray, setPhotosArray] = useState([]);
+
+    const loading = useSelector((state) => state.user.loading);
+    const fingerScan = useSelector((state) => state.user.fingerToken);
+    const faceScan = useSelector((state) => state.user.faceToken);
+    const [scan, setScan] = useState(null); // null = Not Scanned, true = Scanned successfully, false = Scanned failed
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -27,27 +32,40 @@ const FaceRecognition = () => {
     const { isSignup } = location.state;
     const action = isSignup ? sendPhoto : checkPhoto;
 
-    const capture = useCallback(() => {
-        for (let i = isSignup ? 12 : 1; i--; ) {
-            // If sign up then collect training data
-            setTimeout(() => {
-                const photoBase64 = webcamRef.current.getScreenshot();
-                dispatch(action({ photoBase64 }));
-            }, 150);
+    const capture = useCallback(async () => {
+        if (isSignup) {
+            const photos = await takePhotos(webcamRef, 12);
+
+            setPhotosArray(photos);
+        } else {
+            const photoBase64 = webcamRef.current.getScreenshot();
+
+            dispatch(action({ photoBase64 }));
         }
-        setTimeout(() => {
-            setScan(true);
-            setLoading(false);
-        }, 3000);
     }, [webcamRef]);
 
     useEffect(() => {
-        if (scan) {
+        if (faceScan) {
             setTimeout(() => {
                 fingerScan ? navigate('/dashboard') : navigate('/fingerprint-scan');
             }, 5000);
         }
-    }, [scan]);
+    }, [faceScan]);
+
+    useEffect(() => {
+        if (photosArray.length > 0) {
+            dispatch(action({ photosBase64: photosArray }));
+        }
+    }, [photosArray]);
+
+    useEffect(() => {
+        // Skip first render
+        if (isMounted.current) {
+            setScan(faceScan ? true : false);
+        } else {
+            isMounted.current = true;
+        }
+    }, [faceScan]);
 
     return (
         <ContainerStyled
@@ -75,6 +93,10 @@ const FaceRecognition = () => {
                 {loading && (
                     <>
                         <CircularProgressDark size="35px" sx={{ marginTop: '20px' }} />
+                    </>
+                )}
+                {!loading && (
+                    <>
                         <InfoText component="div" sx={{ fontSize: '24px', marginTop: '10px' }}>
                             Place your face within the marked position, look at the camera then press &quot;Send
                             photo&quot; and wait 3 seconds

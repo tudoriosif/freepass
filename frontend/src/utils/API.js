@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API = axios.create({
     baseURL: `${process.env.REACT_APP_SERVER_URL}/api`,
-    timeout: 1000,
+    timeout: 10000,
     headers: {
         ...(localStorage.getItem('token') && { Authorization: `Bearer ${localStorage.getItem('token')}` })
     }
