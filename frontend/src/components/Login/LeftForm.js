@@ -34,7 +34,7 @@ const LeftForm = ({ pageDetails, submitHandler, validationSchema, isLogin }) => 
     const token = useSelector((state) => state.user.token);
     const location = useLocation();
 
-    if (isLogin && token) {
+    if (token) {
         return <Navigate to="/multimodal" state={{ prevPath: location.pathname }} />;
     }
 

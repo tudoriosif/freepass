@@ -95,7 +95,7 @@ const FaceRecognition = () => {
                         <CircularProgressDark size="35px" sx={{ marginTop: '20px' }} />
                     </>
                 )}
-                {!loading && (
+                {!loading && scan !== true && (
                     <>
                         <InfoText component="div" sx={{ fontSize: '24px', marginTop: '10px' }}>
                             Place your face within the marked position, look at the camera then press &quot;Send

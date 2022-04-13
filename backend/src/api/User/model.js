@@ -17,8 +17,22 @@ const userSchema = new mongoose.Schema(
             ref: 'System'
         },
         mainUser: {
-          type: mongoose.Types.ObjectId,
-          ref: 'User'
+            type: mongoose.Types.ObjectId,
+            ref: 'User'
+        },
+        noSystem: {
+            type: Number,
+            required: true
+        },
+        hasFace: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
+        hasFinger: {
+            type: Boolean,
+            required: true,
+            default: false
         }
     },
     {
@@ -52,7 +66,7 @@ userSchema.methods.isValidPassword = async function (password) {
 };
 
 userSchema.pre('findOneAndUpdate', async function (next) {
-    if(!this._update.password) return next();
+    if (!this._update.password) return next();
 
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(this._update.password, salt);

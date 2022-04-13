@@ -22,6 +22,7 @@ String fingerprintTemplate = "";
 const char* ssid     = STASSID;
 const char* password = STAPSK;
 
+
 ESP8266WebServer server(8001);
 
 const int led = LED_BUILTIN;

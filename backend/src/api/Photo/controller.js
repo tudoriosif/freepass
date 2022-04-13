@@ -4,6 +4,7 @@ import { nanoid5 } from '../../config/nanoid';
 import { pyFace, pyTrain } from './service';
 import jwt from 'jsonwebtoken';
 import config from '../../config/config';
+import User from '../User/model';
 
 export const storeTrainPhoto = async (req, res, next) => {
     try {
@@ -11,9 +12,14 @@ export const storeTrainPhoto = async (req, res, next) => {
         const { email } = req.user;
 
         const path = `./src/faces/${email}/train`;
+        const checkPath = `./src/faces/${email}/check`;
 
         if (!fs.existsSync(path)) {
             fs.mkdirSync(path, { recursive: true });
+        }
+
+        if (!fs.existsSync(checkPath)) {
+            fs.mkdirSync(checkPath, { recursive: true });
         }
 
         await Promise.all(
@@ -29,6 +35,10 @@ export const storeTrainPhoto = async (req, res, next) => {
             email: req.user.email,
             path
         };
+
+        const user = await User.findOne({ email });
+        user.hasFace = true;
+        await user.save();
 
         const faceToken = jwt.sign({ user: payload }, config.secretKey);
 

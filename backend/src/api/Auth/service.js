@@ -9,7 +9,14 @@ passport.use(
     'login',
     new LocalStrategy({ usernameField: 'email', passwordField: 'password' }, async (email, password, done) => {
         try {
-            const user = await User.findOne({ email }).populate('mainUser systemID');
+            const user = await User.findOne({ email })
+                .populate('systemID')
+                .populate({
+                    path: 'mainUser',
+                    populate: {
+                        path: 'systemID'
+                    }
+                });
 
             if (!user) {
                 return done(null, false, { message: 'User not found!' });
@@ -46,9 +53,17 @@ passport.use(
 
 export const checkSystem = async (systemID) => {
     const existingSystem = await System.findOne({ systemID });
-    const existingUser = await User.findOne({ systemID: existingSystem._id }).populate('systemID');
 
-    return !existingUser && existingSystem;
+    return !!existingSystem;
+};
+
+export const checkUsers = async (systemID) => {
+    const system = await System.findOne({ systemID });
+    const existingUsers = await User.find({ systemID: system._id })
+        .sort([['noSystem', -1]])
+        .populate('systemID');
+
+    return existingUsers;
 };
 
 export default passport;

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import passport from 'passport';
 import config from '../../config/config';
 import User from '../User/model';
-import { checkSystem } from './service';
+import { checkSystem, checkUsers } from './service';
 
 export const loginUser = async (req, res, next) => {
     passport.authenticate('login', async (error, user, info) => {
@@ -21,8 +21,9 @@ export const loginUser = async (req, res, next) => {
             const payload = {
                 id: user._id || user.id,
                 email: user.email,
-                systemID: user.systemID.systemID,
-                role: user.mainUser ? 'SUB' : 'MAIN'
+                systemID: user.systemID?.systemID || user.mainUser?.systemID?.systemID,
+                role: user.mainUser ? 'SUB' : 'MAIN',
+                noSystem: user.noSystem
             };
 
             const token = jwt.sign({ user: payload }, config.secretKey);
@@ -39,17 +40,41 @@ export const signupUser = async (req, res, next) => {
         const system = await checkSystem(systemID);
         if (!system)
             return res.status(400).json({
-                error: 'Please provide a valid System ID or contact Main user to add a new account on this system'
+                error: 'Please provide a valid System ID'
             });
+
         if (!(email && password)) return res.status(400).json({ error: 'Please provide an email & password!' });
 
         const existingUser = await User.findOne({ email });
 
         if (existingUser) return res.status(400).json({ error: 'Email is already taken!' });
 
-        const newUser = await User.create({ email, password, systemID: mongoose.Types.ObjectId(system.id) });
+        const existingUsers = await checkUsers(systemID);
 
-        return res.status(201).json({ mesasge: 'New user created!', newUser });
+        const mainUser = !existingUsers.length
+            ? undefined
+            : mongoose.Types.ObjectId(existingUsers[existingUsers.length - 1].id); // if it's first user is the main one
+        const noSystem = existingUsers.length;
+
+        const newUser = await User.create({
+            email,
+            password,
+            systemID: mongoose.Types.ObjectId(system.id),
+            mainUser,
+            noSystem
+        });
+
+        const payload = {
+            id: newUser._id || newUser.id,
+            email: newUser.email,
+            systemID: existingUsers[0].systemID?.systemID,
+            role: newUser.mainUser ? 'SUB' : 'MAIN',
+            noSystem: newUser.noSystem
+        };
+
+        const token = jwt.sign({ user: payload }, config.secretKey);
+
+        return res.status(201).json({ mesasge: 'New user created!', ...payload, token });
     } catch (error) {
         return next(error);
     }

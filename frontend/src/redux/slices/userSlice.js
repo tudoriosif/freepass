@@ -7,6 +7,7 @@ const initialState = {
     email: '',
     role: '',
     systemID: '',
+    noSystem: '',
     token: '',
     faceToken: '',
     fingerToken: 'randomtoken',
@@ -40,6 +41,7 @@ const userSlice = createSlice({
             state.loading = false;
         },
         [register.fulfilled]: (state, action) => {
+            localStorage.setItem('token', action.payload.token);
             return { ...initialState, ...action.payload, error: '', loading: false };
         },
         [register.rejected]: (state, action) => {
