@@ -54,7 +54,7 @@ export const signupUser = async (req, res, next) => {
         const mainUser = !existingUsers.length
             ? undefined
             : mongoose.Types.ObjectId(existingUsers[existingUsers.length - 1].id); // if it's first user is the main one
-        const noSystem = existingUsers.length;
+        const noSystem = existingUsers.length+1;
 
         const newUser = await User.create({
             email,

@@ -312,6 +312,8 @@ void getFingerPrint() {
   }
 
   deserializeJson(payload, server.arg("plain"));
+  Serial.println(server.arg("plain"));
+  serializeJsonPretty(payload, Serial);
   int userNumber = payload["user"];
   if (!userNumber) {
     respondError(400, "User number not provided");
@@ -391,6 +393,40 @@ void checkFingerPrint() {
   response = "";
 }
 
+void emptyFingerPrint() {
+  responseJSON.clear();
+  payload.clear();
+  
+  if (server.method() != HTTP_POST) {
+    respondError(405, "Method not allowed!");
+    return;
+  }
+
+  if (!server.hasHeader("Authorization")) {
+    respondError(400, "No token provided!");
+    return;
+  }
+
+  const String requestNodeID = server.hasHeader("Node") ? server.header("Node") : "not correct";
+  if (requestNodeID != NODE_ID) {
+    stringPrint(requestNodeID, "Node_ID: ");
+    respondError(400, "The node_id provided is incorrect!");
+    return;
+  }
+
+  finger.emptyDatabase();
+
+  responseJSON["message"] = "Now database is empty!";
+
+  finger.getTemplateCount();
+  Serial.println(finger.templateCount);
+
+  serializeJsonPretty(responseJSON, Serial);
+  serializeJson(responseJSON, response);
+  server.send(200, "application/json", response);
+  response = "";
+}
+
 
 void handleNotFound() {
   respondError(404, "Endpoint not found!");
@@ -431,7 +467,8 @@ void setup(void) {
     Serial.println("MDNS responder started");
   }
   server.on("/fingerprint/check", checkFingerPrint);
-  server.on("/fingerprint/save", getFingerPrint);
+  server.on("/fingerprint/scan", getFingerPrint);
+  server.on("/fingerprint/empty", emptyFingerPrint);
 
   server.onNotFound(handleNotFound);
 

@@ -10,4 +10,6 @@ router.post('/scan', scanFingerprint);
 
 router.post('/check', checkFingerprint);
 
+router.post('/empty', checkFingerprint);
+
 export default router;
