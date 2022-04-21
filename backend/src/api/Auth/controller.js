@@ -18,12 +18,16 @@ export const loginUser = async (req, res, next) => {
                 return next(error);
             }
 
+            console.log(user.systemID?.systemID || user.mainUser?.systemID?.systemID);
+
             const payload = {
                 id: user._id || user.id,
                 email: user.email,
                 systemID: user.systemID?.systemID || user.mainUser?.systemID?.systemID,
                 role: user.mainUser ? 'SUB' : 'MAIN',
-                noSystem: user.noSystem
+                noSystem: user.noSystem,
+                hasFace: user.hasFace,
+                hasFinger: user.hasFinger
             };
 
             const token = jwt.sign({ user: payload }, config.secretKey);
@@ -36,8 +40,13 @@ export const loginUser = async (req, res, next) => {
 export const signupUser = async (req, res, next) => {
     const { email, password, systemID } = req.body;
 
+    let newUser;
+
     try {
         const system = await checkSystem(systemID);
+
+        console.log(system)
+
         if (!system)
             return res.status(400).json({
                 error: 'Please provide a valid System ID'
@@ -54,9 +63,9 @@ export const signupUser = async (req, res, next) => {
         const mainUser = !existingUsers.length
             ? undefined
             : mongoose.Types.ObjectId(existingUsers[existingUsers.length - 1].id); // if it's first user is the main one
-        const noSystem = existingUsers.length+1;
+        const noSystem = existingUsers.length + 1;
 
-        const newUser = await User.create({
+        newUser = await User.create({
             email,
             password,
             systemID: mongoose.Types.ObjectId(system.id),
@@ -67,7 +76,7 @@ export const signupUser = async (req, res, next) => {
         const payload = {
             id: newUser._id || newUser.id,
             email: newUser.email,
-            systemID: existingUsers[0].systemID?.systemID,
+            systemID,
             role: newUser.mainUser ? 'SUB' : 'MAIN',
             noSystem: newUser.noSystem
         };
@@ -76,6 +85,7 @@ export const signupUser = async (req, res, next) => {
 
         return res.status(201).json({ mesasge: 'New user created!', ...payload, token });
     } catch (error) {
+        newUser?.remove();
         return next(error);
     }
 };

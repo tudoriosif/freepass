@@ -29,7 +29,7 @@ const FaceRecognition = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-    const { isSignup } = location.state;
+    const { isSignup } = location?.state;
     const action = isSignup ? sendPhoto : checkPhoto;
 
     const capture = useCallback(async () => {
@@ -47,7 +47,7 @@ const FaceRecognition = () => {
     useEffect(() => {
         if (faceScan) {
             setTimeout(() => {
-                fingerScan ? navigate('/dashboard') : navigate('/fingerprint-scan');
+                fingerScan ? navigate('/dashboard') : navigate('/fingerprint-scan', { state: location.state });
             }, 5000);
         }
     }, [faceScan]);

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { login, register } from '../thunks/user';
+import { checkFinger, emptyFinger, scanFinger } from './fingerSlice';
 import { checkPhoto, sendPhoto } from './photoSlice';
 
 const initialState = {
@@ -10,7 +11,9 @@ const initialState = {
     noSystem: '',
     token: '',
     faceToken: '',
-    fingerToken: 'randomtoken',
+    fingerToken: '',
+    hasFace: false,
+    hasFigner: false,
     error: '',
     loading: false
 };
@@ -30,6 +33,12 @@ const userSlice = createSlice({
             state.loading = true;
         },
         [checkPhoto.pending]: (state, action) => {
+            state.loading = true;
+        },
+        [scanFinger.pending]: (state, action) => {
+            state.loading = true;
+        },
+        [checkFinger.pending]: (state, action) => {
             state.loading = true;
         },
         [login.fulfilled]: (state, action) => {
@@ -56,6 +65,26 @@ const userSlice = createSlice({
         [sendPhoto.rejected]: (state, action) => {
             localStorage.removeItem('faceToken');
             state.faceToken = '';
+            state.loading = false;
+        },
+        [scanFinger.fulfilled]: (state, action) => {
+            localStorage.setItem('fingerToken', action.payload.fingerToken);
+            state.fingerToken = action.payload.fingerToken;
+            state.loading = false;
+        },
+        [scanFinger.rejected]: (state, action) => {
+            localStorage.removeItem('fingerToken');
+            state.fingerToken = '';
+            state.loading = false;
+        },
+        [checkFinger.fulfilled]: (state, action) => {
+            localStorage.setItem('fingerToken', action.payload.fingerToken);
+            state.fingerToken = action.payload.fingerToken;
+            state.loading = false;
+        },
+        [checkFinger.rejected]: (state, action) => {
+            localStorage.removeItem('fingerToken');
+            state.fingerToken = '';
             state.loading = false;
         },
         [checkPhoto.fulfilled]: (state, action) => {

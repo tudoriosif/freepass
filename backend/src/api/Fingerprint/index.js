@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { scanFingerprint, checkFingerprint } from './controller';
+import { scanFingerprint, checkFingerprint, emptyFingerprint } from './controller';
 import passport from 'passport';
 
 const router = new Router();
@@ -10,6 +10,6 @@ router.post('/scan', scanFingerprint);
 
 router.post('/check', checkFingerprint);
 
-router.post('/empty', checkFingerprint);
+router.post('/empty', emptyFingerprint);
 
 export default router;

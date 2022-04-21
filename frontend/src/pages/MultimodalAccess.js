@@ -10,7 +10,11 @@ const MultimodalAccess = () => {
 
     return (
         <SplitContainer disableGutters maxWidth={false}>
-            <MetricAccess ProvidedIcon={TouchAppIcon} to="/fingerprint-scan" />
+            <MetricAccess
+                ProvidedIcon={TouchAppIcon}
+                to="/fingerprint-scan"
+                state={{ isSignup: location?.state?.prevPath !== '/' }}
+            />
             <MetricAccess isLight to="/face-recognition" state={{ isSignup: location?.state?.prevPath !== '/' }} />
         </SplitContainer>
     );

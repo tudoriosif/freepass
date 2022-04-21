@@ -25,3 +25,5 @@ export const register = createAsyncThunk(
 export default {
     login
 };
+
+// IMPLEMENTE hasFace hasFinger on action instead of singup
