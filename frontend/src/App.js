@@ -9,7 +9,7 @@ import FaceRecognition from './pages/FaceRecognition';
 import { Routes, Route } from 'react-router-dom';
 import SignUp from './pages/SignUp';
 import NavLayout from './utils/NavLayout';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './components/Dashboard/Dashboard';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { ROLES } from './constants/constants';
 

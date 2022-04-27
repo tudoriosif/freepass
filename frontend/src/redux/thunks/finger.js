@@ -6,7 +6,6 @@ export const scanFinger = createAsyncThunk('finger/scanFinger', async (systemID,
         const res = await API.post('/fingerprint/scan', systemID);
         return res.data;
     } catch (error) {
-        console.log(error)
         return rejectWithValue(error.response.data);
     }
 });

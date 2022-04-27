@@ -11,7 +11,8 @@ const config = {
     },
     port: process.env.PORT,
     secretKey: process.env.JWT_SECRET_KEY,
-    fingerURL: process.env.FINGER_URI
+    fingerURL: process.env.FINGER_URI,
+    wsBaseURL: process.env.WS_URL
 };
 
 export default config;

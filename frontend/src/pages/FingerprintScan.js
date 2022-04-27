@@ -14,13 +14,14 @@ const FingerprintScan = () => {
     const loading = useSelector((state) => state.user.loading);
     const fingerScan = useSelector((state) => state.user.fingerToken);
     const faceScan = useSelector((state) => state.user.faceToken);
+    const hasFinger = useSelector((state) => state.user.hasFinger);
     const [scan, setScan] = useState(null); // null = Not Scanned, true = Scanned successfully, false = Scanned failed
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
     const { isSignup } = location.state;
-    const action = isSignup ? scanFinger : checkFinger;
+    const action = isSignup || !hasFinger ? scanFinger : checkFinger;
 
     // Redirect on success
     useEffect(() => {

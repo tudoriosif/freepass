@@ -78,7 +78,9 @@ export const signupUser = async (req, res, next) => {
             email: newUser.email,
             systemID,
             role: newUser.mainUser ? 'SUB' : 'MAIN',
-            noSystem: newUser.noSystem
+            noSystem: newUser.noSystem,
+            hasFace: false,
+            hasFinger: false,
         };
 
         const token = jwt.sign({ user: payload }, config.secretKey);

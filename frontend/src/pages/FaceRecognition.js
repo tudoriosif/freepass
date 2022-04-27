@@ -24,13 +24,14 @@ const FaceRecognition = () => {
     const loading = useSelector((state) => state.user.loading);
     const fingerScan = useSelector((state) => state.user.fingerToken);
     const faceScan = useSelector((state) => state.user.faceToken);
+    const hasFace = useSelector((state) => state.user.hasFace);
     const [scan, setScan] = useState(null); // null = Not Scanned, true = Scanned successfully, false = Scanned failed
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
     const { isSignup } = location?.state;
-    const action = isSignup ? sendPhoto : checkPhoto;
+    const action = isSignup || !hasFace ? sendPhoto : checkPhoto;
 
     const capture = useCallback(async () => {
         if (isSignup) {
