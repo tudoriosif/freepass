@@ -22,5 +22,6 @@ export const ROLES = {
 };
 
 export const ERRORS = {
-    ROLE: 'You do not have the right access for this page'
+    ROLE: 'You do not have the right access for this page',
+    BASE: 'An error has occured!'
 };

@@ -54,7 +54,8 @@ def show_output(output_list):
             current_plot.set_xlabel(current_xlabel)
             current_plot.set_ylabel(current_ylabel)
         elif current_type == "histogram":
-            current_plot.plot(current_img, color="black")
+            flatten = [item for sublist in current_img for item in sublist]
+            current_plot.bar(range(256), flatten, align="center")
             current_plot.set_xlim([0, 260])
             current_plot.set_title(current_title)
             current_plot.set_xlabel(current_xlabel)

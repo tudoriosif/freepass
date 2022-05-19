@@ -3,7 +3,6 @@ import { SideBox } from './styles';
 import { Stack } from '@mui/material';
 import GridViewIcon from '@mui/icons-material/GridView';
 import LinkedCameraIcon from '@mui/icons-material/LinkedCamera';
-import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import RadarIcon from '@mui/icons-material/Radar';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -18,7 +17,6 @@ const SideBar = () => {
     const list = [
         { text: 'Dashboard', Icon: GridViewIcon },
         { text: 'Devices', Icon: LinkedCameraIcon },
-        { text: 'Live', Icon: OndemandVideoIcon },
         { text: 'Events', Icon: RadarIcon },
         { text: 'Roles', Icon: PersonAddAlt1Icon },
         { text: 'Settings', Icon: SettingsIcon }

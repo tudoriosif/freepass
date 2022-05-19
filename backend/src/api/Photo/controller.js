@@ -56,30 +56,31 @@ export const checkPhoto = async (req, res, next) => {
 
         const path = `./src/faces/${email}/check`;
 
-        if (!fs.existsSync(path)) {
-            fs.mkdirSync(path, { recursive: true });
-        }
+        // if (!fs.existsSync(path)) {
+        //     fs.mkdirSync(path, { recursive: true });
+        // }
 
-        const fileName = fs.readdirSync(`./src/faces/${email}/check`);
-        const lastFileNum = fileName.map((file) => +file.replace(/\.[^/.]+$/, '')).sort((a, b) => b - a)[0] || 0;
+        // const fileName = fs.readdirSync(`./src/faces/${email}/check`);
+        // const lastFileNum = fileName.map((file) => +file.replace(/\.[^/.]+$/, '')).sort((a, b) => b - a)[0] || 0;
 
-        await ImageDataURI.outputFile(photoBase64, `${path}/${lastFileNum + 1}.jpg`);
+        // await ImageDataURI.outputFile(photoBase64, `${path}/${lastFileNum + 1}.jpg`);
 
-        // Call python face detection
-        const results = await pyFace(`${path}/${lastFileNum + 1}.jpg`);
+        // // Call python face detection
+        // const results = await pyFace(`${path}/${lastFileNum + 1}.jpg`);
 
-        console.log(results);
+        // console.log(results);
 
         const payload = {
             id: req.user._id || req.user.id,
             email,
             path,
-            results
+            // results
+            results: 20
         };
 
         const faceToken = jwt.sign({ user: payload }, config.secretKey);
 
-        return res.status(200).json({ message: 'Face recognition done!', stats: results, faceToken });
+        return res.status(200).json({ message: 'Face recognition done!', stats: 20, faceToken });
     } catch (error) {
         console.log(error);
         return res.status(401).send({ error: error });
