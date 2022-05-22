@@ -2,7 +2,7 @@ import { WebSocket } from 'ws';
 import config from '../../config/config';
 
 export const buildWSURL = (nodeNumber, port) => {
-    return `ws://${config.wsBaseURL}.${nodeNumber}/${port}`;
+    return `ws://${config.wsBaseURL}.${nodeNumber}:${port}`;
 };
 
 export const checkClientConnection = (wss) => {

@@ -5,6 +5,8 @@ import { pyFace, pyTrain } from './service';
 import jwt from 'jsonwebtoken';
 import config from '../../config/config';
 import User from '../User/model';
+import { eventMiddleware } from '../Event/middleware';
+import { EVENT_TYPES } from '../../utils/constants';
 
 export const storeTrainPhoto = async (req, res, next) => {
     try {
@@ -41,6 +43,8 @@ export const storeTrainPhoto = async (req, res, next) => {
         await user.save();
 
         const faceToken = jwt.sign({ user: payload }, config.secretKey);
+
+        eventMiddleware(EVENT_TYPES.FACE, req.user);
 
         return res.status(200).json({ message: result, faceToken });
     } catch (error) {
@@ -79,6 +83,8 @@ export const checkPhoto = async (req, res, next) => {
         };
 
         const faceToken = jwt.sign({ user: payload }, config.secretKey);
+
+        eventMiddleware(EVENT_TYPES.FACE, req.user);
 
         return res.status(200).json({ message: 'Face recognition done!', stats: 20, faceToken });
     } catch (error) {

@@ -9,3 +9,14 @@ export const NODE_TYPES = {
     FP: 'fingerprint',
     AS_ARRAY: ['webcam', 'fingerprint']
 };
+
+export const EVENT_TYPES = {
+    DETECT: 'detect',
+    NEW_ACCOUNT: 'new_account',
+    VIDEO_START: 'video_start',
+    FINGERPRINT: 'fingerprint',
+    FACE: 'face',
+    LOGIN: 'login',
+    
+    AS_ARRAY: ['detect', 'new_account', 'video_start', 'fingerprint', 'face', 'login']
+};

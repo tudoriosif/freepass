@@ -4,6 +4,8 @@ import passport from 'passport';
 import config from '../../config/config';
 import User from '../User/model';
 import { checkSystem, checkUsers } from './service';
+import { eventMiddleware } from '../Event/middleware';
+import { EVENT_TYPES } from '../../utils/constants';
 
 export const loginUser = async (req, res, next) => {
     passport.authenticate('login', async (error, user, info) => {
@@ -18,8 +20,6 @@ export const loginUser = async (req, res, next) => {
                 return next(error);
             }
 
-            console.log(user.systemID?.systemID || user.mainUser?.systemID?.systemID);
-
             const payload = {
                 id: user._id || user.id,
                 email: user.email,
@@ -31,6 +31,8 @@ export const loginUser = async (req, res, next) => {
             };
 
             const token = jwt.sign({ user: payload }, config.secretKey);
+
+            eventMiddleware(EVENT_TYPES.LOGIN, user);
 
             return res.status(200).json({ token, ...payload });
         });
@@ -45,7 +47,7 @@ export const signupUser = async (req, res, next) => {
     try {
         const system = await checkSystem(systemID);
 
-        console.log(system)
+        console.log(system);
 
         if (!system)
             return res.status(400).json({
@@ -80,10 +82,12 @@ export const signupUser = async (req, res, next) => {
             role: newUser.mainUser ? 'SUB' : 'MAIN',
             noSystem: newUser.noSystem,
             hasFace: false,
-            hasFinger: false,
+            hasFinger: false
         };
 
         const token = jwt.sign({ user: payload }, config.secretKey);
+
+        eventMiddleware(EVENT_TYPES.NEW_ACCOUNT, newUser);
 
         return res.status(201).json({ mesasge: 'New user created!', ...payload, token });
     } catch (error) {

@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
-import { FINGER_OP, NODE_TYPES } from '../../utils/constants';
+import { EVENT_TYPES, FINGER_OP, NODE_TYPES } from '../../utils/constants';
 import { fingerprintService } from './service';
 import Node from '../Node/model';
 import System from '../System/model';
 import User from '../User/model';
 import config from '../../config/config';
+import { eventMiddleware } from '../Event/middleware';
 
 export const scanFingerprint = async (req, res, next) => {
     try {
@@ -33,6 +34,8 @@ export const scanFingerprint = async (req, res, next) => {
         user.hasFinger = true;
         await user.save();
 
+        eventMiddleware(EVENT_TYPES.FINGERPRINT, user);
+
         return res.status(200).json({ message: 'Finger print was saved successfully', fingerToken });
     } catch (error) {
         console.log(error);
@@ -60,6 +63,8 @@ export const checkFingerprint = async (req, res, next) => {
         };
 
         const fingerToken = jwt.sign({ user: payload }, config.secretKey);
+
+        eventMiddleware(EVENT_TYPES.FINGERPRINT, req.user);
 
         return res.status(200).json({ message: 'Finger print was checked successfully', fingerToken });
     } catch (error) {

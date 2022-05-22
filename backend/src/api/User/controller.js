@@ -3,10 +3,7 @@ import System from '../System/model';
 
 export const getUsersBySystem = async (req, res, next) => {
     try {
-        console.log(req.user);
         const { noSystem, systemID } = req.user;
-
-        console.log(noSystem);
 
         if (noSystem !== 1) {
             // not admin

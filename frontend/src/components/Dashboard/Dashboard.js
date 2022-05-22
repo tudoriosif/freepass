@@ -1,6 +1,6 @@
 import { Badge, Card, CardContent, CardMedia, Container } from '@mui/material';
 import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createTransmission, closeTransmission } from '../../redux/slices/camSlice';
 
 import { ContainerStyled, MiddleCardText } from './styles.js';
@@ -30,22 +30,29 @@ webSocketPIR.onclose = () => {
 
 const Dashboard = () => {
     const dispatch = useDispatch();
+
+    const message = useSelector((state) => state.cam.message);
+    const error = useSelector((state) => state.cam.error);
+    const loading = useSelector((state) => state.cam.loading);
+
     useEffect(() => {
-        // dispatch(createTransmission({ nodeNumber: 1 }));
+        dispatch(createTransmission({ nodeNumber: 1 }));
     }, []);
 
     return (
         <ContainerStyled maxWidth={false} disableGutters>
-            <Card sx={{ width: '90%', maxWidth: '1280px', height: '90%' }}>
+            <Card sx={{ width: '90%', maxWidth: '1280px', height: '90%', maxHeight: '800px' }}>
                 <CardMedia
                     component="img"
                     src="https://images.unsplash.com/photo-1638913662415-8c5f79b20656?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
                     height="92%"
                 />
                 <CardContent sx={{ textAlign: 'center' }}>
-                    <Badge variant="dot" sx={{ '& > span': { backgroundColor: '#d00000' } }}>
-                        <MiddleCardText>Live stream</MiddleCardText>
-                    </Badge>
+                    {!error && (
+                        <Badge variant="dot" sx={{ '& > span': { backgroundColor: '#d00000' } }}>
+                            <MiddleCardText>Live stream</MiddleCardText>
+                        </Badge>
+                    )}
                 </CardContent>
             </Card>
         </ContainerStyled>

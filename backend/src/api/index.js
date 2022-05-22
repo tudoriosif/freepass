@@ -6,6 +6,7 @@ import loginRoutes from './Auth';
 import fingerprintRoutes from './Fingerprint';
 import nodeRoutes from './Node';
 import camRoutes from './Cam';
+import eventsRoutes from './Event';
 
 const router = new Router();
 
@@ -16,5 +17,6 @@ router.use('/auth', loginRoutes);
 router.use('/fingerprint', fingerprintRoutes);
 router.use('/node', nodeRoutes);
 router.use('/cam', camRoutes);
+router.use('/events', eventsRoutes);
 
 export default router;

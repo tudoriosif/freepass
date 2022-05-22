@@ -6,6 +6,7 @@ import fingerSlice from './slices/fingerSlice';
 import camSlice from './slices/camSlice';
 import nodeSlice from './slices/nodeSlice';
 import usersSlice from './slices/usersSlice';
+import eventsSlice from './slices/eventsSlice';
 
 export default configureStore({
     reducer: {
@@ -15,6 +16,7 @@ export default configureStore({
         finger: fingerSlice,
         cam: camSlice,
         node: nodeSlice,
-        users: usersSlice
+        users: usersSlice,
+        events: eventsSlice
     }
 });

@@ -28,50 +28,93 @@
 
 // Replace with your network credentials
 const char* hostname = "ESP32CAM";
-const char* ssid = "DLink085C1";
+const char* ssid = "DIGI-Z6hf";
 const char* password = "0744592933";
 
-IPAddress local_ip(192, 168, 0, 20);
-IPAddress gateway(192, 168, 0, 1);
+IPAddress local_ip(192, 168, 100, 20);
+IPAddress gateway(192, 168, 100, 1);
 IPAddress subnet(255, 255, 255, 0);
-IPAddress primaryDNS(192, 168, 0, 1);
+IPAddress primaryDNS(192, 168, 100, 1);
 
 
-WebSocketsServer webSocket = WebSocketsServer(8000);
-WebSocketsServer webSocketPIR = WebSocketsServer(8001);
+WebSocketsServer webSocket = WebSocketsServer(80);
+WebSocketsServer webSocketPIR = WebSocketsServer(81);
 
-bool client_connected = false;
-uint8_t client_num;
+//bool client_connected = false;
+//uint8_t client_num;
+
+bool client_connectedPIR = false;
+uint8_t client_numPIR;
 
 bool motionDetected = false;
 
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
+//void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
+//
+//  switch(type) {
+//    case WStype_DISCONNECTED:
+//      Serial.printf("[WSc] Disconnected!\n");
+//      if(num == client_num) {
+//        client_connected = false;
+//      }
+//      break;
+//    case WStype_CONNECTED:
+//      Serial.printf("[WSc] Connected to url: %s\n", payload);
+//      Serial.print("Num");
+//      Serial.println(num);
+//      client_num = num;
+//      client_connected = true;
+//      Serial.print("Client connected");
+//      Serial.println(client_connected);
+//      break;
+//    case WStype_TEXT:
+//      Serial.printf("[WSc] get text: %s\n", payload);
+//      break;
+//    case WStype_BIN:
+//      Serial.printf("[WSc] get binary length: %u\n", length);
+//      break;
+//    case WStype_PING:
+//        // pong will be send automatically
+//        Serial.printf("[WSc] get ping\n");
+//        break;
+//    case WStype_PONG:
+//        // answer to a ping we send
+//        Serial.printf("[WSc] get pong\n");
+//        break;
+//    }
+//
+//}
+
+void webSocketEvent2(uint8_t num, WStype_t type, uint8_t * payload, size_t length) {
 
   switch(type) {
     case WStype_DISCONNECTED:
-      Serial.printf("[WSc] Disconnected!\n");
-      if(num == client_num) {
-        client_connected = false;
+      Serial.printf("[WSc2] Disconnected!\n");
+      if(client_numPIR == client_connectedPIR) {
+        client_connectedPIR = false;
       }
       break;
     case WStype_CONNECTED:
-      Serial.printf("[WSc] Connected to url: %s\n", payload);
-      client_num = num;
-      client_connected = true;
+      Serial.printf("[WSc2] Connected to url: %s\n", payload);
+      Serial.print("Num2");
+      Serial.println(num);
+      client_numPIR = num;
+      client_connectedPIR = true;
+      Serial.print("Client connected2");
+      Serial.println(client_connectedPIR);
       break;
     case WStype_TEXT:
-      Serial.printf("[WSc] get text: %s\n", payload);
+      Serial.printf("[WSc2] get text: %s\n", payload);
       break;
     case WStype_BIN:
-      Serial.printf("[WSc] get binary length: %u\n", length);
+      Serial.printf("[WSc2] get binary length: %u\n", length);
       break;
     case WStype_PING:
         // pong will be send automatically
-        Serial.printf("[WSc] get ping\n");
+        Serial.printf("[WSc2] get ping\n");
         break;
     case WStype_PONG:
         // answer to a ping we send
-        Serial.printf("[WSc] get pong\n");
+        Serial.printf("[WSc2] get pong\n");
         break;
     }
 
@@ -147,11 +190,11 @@ void setup(){
 
   setupCamera();
    
-  webSocket.begin();
-  webSocket.onEvent(webSocketEvent);
+//  webSocket.begin();
+//  webSocket.onEvent(webSocketEvent);
 
   webSocketPIR.begin();
-  webSocketPIR.onEvent(webSocketEvent);
+  webSocketPIR.onEvent(webSocketEvent2);
  
 }
 
@@ -159,7 +202,7 @@ void setup(){
 unsigned long messageTimestamp = 0;
 unsigned long pirTimestamp = 0;
 void loop() {
-    webSocket.loop();
+//    webSocket.loop();
     webSocketPIR.loop();
     uint64_t now = millis();
     
@@ -167,34 +210,38 @@ void loop() {
       pirTimestamp = now;
       if(motionDetected){
         String trueString = "1";
-        if(client_connected) {
-          webSocketPIR.sendTXT(client_num, trueString.c_str(), trueString.length());
+        if(client_connectedPIR) {
+          Serial.print("True string");
+          Serial.println(trueString);
+          webSocketPIR.sendTXT(client_numPIR, trueString.c_str(), trueString.length());
         }
         motionDetected = false;
       } else {
         String falseString = "0";
-        if(client_connected) {
-          webSocketPIR.sendTXT(client_num, falseString.c_str(), falseString.length());
+        if(client_connectedPIR) {
+          Serial.print("False string");
+          Serial.println(falseString);
+          webSocketPIR.sendTXT(client_numPIR, falseString.c_str(), falseString.length());
         }
       }
     }
 
 
-    if(now - messageTimestamp > 10) {
-        messageTimestamp = now;
-
-        camera_fb_t * fb = NULL;
-
-        // Take Picture with Camera
-        fb = esp_camera_fb_get();  
-        if(!fb) {
-          Serial.println("Camera capture failed");
-          return;
-        }
-
-        if(client_connected) {
-          webSocket.sendBIN(client_num, fb->buf,fb->len);
-        }
-        esp_camera_fb_return(fb); 
-    }
+//    if(now - messageTimestamp > 10) {
+//        messageTimestamp = now;
+//
+//        camera_fb_t * fb = NULL;
+//
+//        // Take Picture with Camera
+//        fb = esp_camera_fb_get();  
+//        if(!fb) {
+//          Serial.println("Camera capture failed");
+//          return;
+//        }
+//
+//        if(client_connected) {
+//          webSocket.sendBIN(client_num, fb->buf,fb->len);
+//        }
+//        esp_camera_fb_return(fb); 
+//    }
 }

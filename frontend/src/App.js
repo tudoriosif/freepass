@@ -12,6 +12,7 @@ import NavLayout from './utils/NavLayout';
 import Dashboard from './components/Dashboard/Dashboard';
 import Devices from './components/Devices/Devices';
 import Roles from './components/Roles/Roles';
+import Events from './components/Events/Events';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { ROLES } from './constants/constants';
 
@@ -28,7 +29,7 @@ function App() {
                     <Route element={<NavLayout />}>
                         <Route element={<ProtectedRoute />}>
                             <Route path="/dashboard" element={<Dashboard />} />
-                            <Route path="/events" element={<Dashboard />} />
+                            <Route path="/events" element={<Events />} />
                             <Route path="/settings" element={<Dashboard />} />
                         </Route>
                     </Route>
