@@ -1,5 +1,5 @@
 import { Badge, Card, CardContent, CardMedia, Container } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createTransmission, closeTransmission } from '../../redux/slices/camSlice';
 
@@ -16,10 +16,6 @@ webSocketCam.onclose = () => {
     console.log('WSC Closed Connection!');
 };
 
-webSocketCam.onmessage = (message) => {
-    console.log(message);
-};
-
 webSocketPIR.onopen = () => {
     console.log('WSP Connected to server!');
 };
@@ -28,25 +24,35 @@ webSocketPIR.onclose = () => {
     console.log('WSP Closed Connection!');
 };
 
+webSocketPIR.onmessage = (message) => {
+    console.log(message.data);
+};
+
 const Dashboard = () => {
+    const [videoURL, setVideoURL] = useState(null);
+
     const dispatch = useDispatch();
 
     const message = useSelector((state) => state.cam.message);
     const error = useSelector((state) => state.cam.error);
     const loading = useSelector((state) => state.cam.loading);
 
+    webSocketCam.onmessage = (message) => {
+        console.log(message.data); // convert to URL.createObjectURL -> image donee
+        const url = URL.createObjectURL(message.data);
+        setVideoURL(url);
+    };
+
     useEffect(() => {
         dispatch(createTransmission({ nodeNumber: 1 }));
+
+        return () => dispatch(closeTransmission({ nodeNumber: 1 }));
     }, []);
 
     return (
         <ContainerStyled maxWidth={false} disableGutters>
             <Card sx={{ width: '90%', maxWidth: '1280px', height: '90%', maxHeight: '800px' }}>
-                <CardMedia
-                    component="img"
-                    src="https://images.unsplash.com/photo-1638913662415-8c5f79b20656?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-                    height="92%"
-                />
+                <CardMedia component="img" src={videoURL} height="92%" />
                 <CardContent sx={{ textAlign: 'center' }}>
                     {!error && (
                         <Badge variant="dot" sx={{ '& > span': { backgroundColor: '#d00000' } }}>

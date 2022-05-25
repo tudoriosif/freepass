@@ -26,6 +26,21 @@ const camSlice = createSlice({
             state.error = action.payload?.error;
             state.loading = false;
             state.message = [];
+        },
+        [closeTransmission.pending]: (state) => {
+            state.loading = true;
+            state.error = '';
+            state.message = [];
+        },
+        [closeTransmission.fulfilled]: (state, action) => {
+            state.message = action.payload?.message;
+            state.loading = false;
+            state.error = '';
+        },
+        [closeTransmission.rejected]: (state, action) => {
+            state.error = action.payload?.error;
+            state.loading = false;
+            state.message = [];
         }
     }
 });
