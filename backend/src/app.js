@@ -9,7 +9,7 @@ import WebSocket from 'ws';
 
 const { mongo, port } = config;
 
-const app = express();
+export const app = express();
 
 app.use(express.json({ limit: '50mb' }));
 app.use(cors());

@@ -5,6 +5,8 @@ import { createTransmission, closeTransmission } from '../../redux/slices/camSli
 
 import { ContainerStyled, MiddleCardText } from './styles.js';
 
+import { useTimer } from 'react-timer-hook';
+
 const webSocketCam = new WebSocket('ws://localhost:8000/stream_cam');
 const webSocketPIR = new WebSocket('ws://localhost:8000/pir_sensor');
 
@@ -28,6 +30,8 @@ webSocketPIR.onmessage = (message) => {
     console.log(message.data);
 };
 
+let fps = 0;
+
 const Dashboard = () => {
     const [videoURL, setVideoURL] = useState(null);
 
@@ -40,8 +44,15 @@ const Dashboard = () => {
     webSocketCam.onmessage = (message) => {
         console.log(message.data); // convert to URL.createObjectURL -> image donee
         const url = URL.createObjectURL(message.data);
+        fps++;
         setVideoURL(url);
     };
+
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + 60);
+    const { seconds, minutes, hours } = useTimer({ expiryTimestamp: time, onExpire: () => console.log(fps) });
+
+    console.log(time, seconds, minutes, hours);
 
     useEffect(() => {
         dispatch(createTransmission({ nodeNumber: 1 }));

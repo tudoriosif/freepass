@@ -3,7 +3,6 @@ import System from '../System/model';
 import mongoose from 'mongoose';
 
 export const eventMiddleware = async (eventType, user) => {
-    console.log(eventType, user, typeof user);
 
     let systemID;
 
@@ -18,5 +17,5 @@ export const eventMiddleware = async (eventType, user) => {
         hadFace: user.hasFace,
         hadFinger: user.hasFinger
     });
-    console.log(newEvent);
+    console.log('New event! ', eventType);
 };

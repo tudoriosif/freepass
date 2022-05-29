@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import passport from 'passport';
+import CryptoJS from 'crypto-js';
 import config from '../../config/config';
 import User from '../User/model';
 import { checkSystem, checkUsers } from './service';
@@ -30,7 +31,9 @@ export const loginUser = async (req, res, next) => {
                 hasFinger: user.hasFinger
             };
 
-            const token = jwt.sign({ user: payload }, config.secretKey);
+            const cipherPayload = CryptoJS.AES.encrypt(JSON.stringify(payload), config.secretKey).toString();
+
+            const token = jwt.sign({ user: cipherPayload }, config.secretKey);
 
             eventMiddleware(EVENT_TYPES.LOGIN, user);
 
@@ -46,8 +49,6 @@ export const signupUser = async (req, res, next) => {
 
     try {
         const system = await checkSystem(systemID);
-
-        console.log(system);
 
         if (!system)
             return res.status(400).json({
@@ -85,7 +86,9 @@ export const signupUser = async (req, res, next) => {
             hasFinger: false
         };
 
-        const token = jwt.sign({ user: payload }, config.secretKey);
+        const cipherPayload = CryptoJS.AES.encrypt(JSON.stringify(payload), config.secretKey).toString();
+
+        const token = jwt.sign({ user: cipherPayload }, config.secretKey);
 
         eventMiddleware(EVENT_TYPES.NEW_ACCOUNT, newUser);
 

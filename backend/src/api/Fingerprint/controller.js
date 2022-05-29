@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import CryptoJS from 'crypto-js';
 import { EVENT_TYPES, FINGER_OP, NODE_TYPES } from '../../utils/constants';
 import { fingerprintService } from './service';
 import Node from '../Node/model';
@@ -28,7 +29,9 @@ export const scanFingerprint = async (req, res, next) => {
             templateTen: scanResults.template.slice(0, 10)
         };
 
-        const fingerToken = jwt.sign({ user: payload }, config.secretKey);
+        const cipherPayload = CryptoJS.AES.encrypt(JSON.stringify(payload), config.secretKey).toString();
+
+        const fingerToken = jwt.sign({ finger: cipherPayload }, config.secretKey);
 
         const user = await User.findOne({ email });
         user.hasFinger = true;
@@ -39,7 +42,7 @@ export const scanFingerprint = async (req, res, next) => {
         return res.status(200).json({ message: 'Finger print was saved successfully', fingerToken });
     } catch (error) {
         console.log(error);
-        return res.status(400).send({ error: error });
+        return res.status(400).send({ error: 'Finger print saving failed' });
     }
 };
 
@@ -53,7 +56,6 @@ export const checkFingerprint = async (req, res, next) => {
 
         // const scanResults = await fingerprintService(FINGER_OP.CHECK, noSystem, fingerprintNode.nodeID);
 
-        // console.log(scanResults);
 
         const payload = {
             id: req.user._id || req.user.id,
@@ -62,14 +64,16 @@ export const checkFingerprint = async (req, res, next) => {
             confidence: 20
         };
 
-        const fingerToken = jwt.sign({ user: payload }, config.secretKey);
+        const cipherPayload = CryptoJS.AES.encrypt(JSON.stringify(payload), config.secretKey).toString();
+
+        const fingerToken = jwt.sign({ finger: cipherPayload }, config.secretKey);
 
         eventMiddleware(EVENT_TYPES.FINGERPRINT, req.user);
 
         return res.status(200).json({ message: 'Finger print was checked successfully', fingerToken });
     } catch (error) {
         console.log(error);
-        return res.status(400).send({ error: error });
+        return res.status(400).send({ error: 'Finger print checking failed!' });
     }
 };
 

@@ -14,6 +14,7 @@ const FingerprintScan = () => {
     const loading = useSelector((state) => state.user.loading);
     const fingerScan = useSelector((state) => state.user.fingerToken);
     const faceScan = useSelector((state) => state.user.faceToken);
+    const error = useSelector((state) => state.finger.error);
     const hasFinger = useSelector((state) => state.user.hasFinger);
     const [scan, setScan] = useState(null); // null = Not Scanned, true = Scanned successfully, false = Scanned failed
 
@@ -73,16 +74,17 @@ const FingerprintScan = () => {
                         </InfoText>
                     </>
                 )}
-                {scan === false && (
-                    <>
-                        <CancelIcon sx={{ fontSize: '75px' }} />
-                        <InfoText component="div">
-                            Something went wrong... <br />
-                            Your fingerprint does not match or couldn&apos;t be scanned <br />
-                            Please try again
-                        </InfoText>
-                    </>
-                )}
+                {scan === false ||
+                    (error && (
+                        <>
+                            <CancelIcon sx={{ fontSize: '75px' }} />
+                            <InfoText component="div">
+                                Something went wrong... <br />
+                                Your fingerprint does not match or couldn&apos;t be scanned <br />
+                                Please try again
+                            </InfoText>
+                        </>
+                    ))}
             </FingerBox>
         </ContainerStyled>
     );

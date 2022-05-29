@@ -4,7 +4,7 @@ import passport from 'passport';
 
 const router = new Router();
 
-router.use(passport.authenticate('jwt', { session: false }));
+router.use(passport.authenticate('jwtUser', { session: false }));
 
 router.post('/upload', storeTrainPhoto);
 

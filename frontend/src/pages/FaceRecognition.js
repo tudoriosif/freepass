@@ -24,6 +24,7 @@ const FaceRecognition = () => {
     const loading = useSelector((state) => state.user.loading);
     const fingerScan = useSelector((state) => state.user.fingerToken);
     const faceScan = useSelector((state) => state.user.faceToken);
+    const error = useSelector((state) => state.photo.error);
     const hasFace = useSelector((state) => state.user.hasFace);
     const [scan, setScan] = useState(null); // null = Not Scanned, true = Scanned successfully, false = Scanned failed
 
@@ -34,7 +35,7 @@ const FaceRecognition = () => {
     const action = isSignup || !hasFace ? sendPhoto : checkPhoto;
 
     const capture = useCallback(async () => {
-        if (isSignup) {
+        if (isSignup || !hasFace) {
             const photos = await takePhotos(webcamRef, 12);
 
             setPhotosArray(photos);
@@ -55,6 +56,7 @@ const FaceRecognition = () => {
 
     useEffect(() => {
         if (photosArray.length > 0) {
+            console.log(photosArray);
             dispatch(action({ photosBase64: photosArray }));
         }
     }, [photosArray]);
@@ -108,23 +110,24 @@ const FaceRecognition = () => {
                     <>
                         <DoneAllIcon sx={{ fontSize: '75px', marginTop: '20px' }} />
                         <InfoText component="div" sx={{ fontSize: '24px', marginTop: '10px' }}>
-                            Your fingerprint was successfully scanned <br />
+                            Your face was successfully scanned <br />
                             {fingerScan
                                 ? `You'll be redirected to dashboard...`
                                 : `You'll be redirected to Fingerprint scan...`}
                         </InfoText>
                     </>
                 )}
-                {scan === false && (
-                    <>
-                        <CancelIcon sx={{ fontSize: '75px', marginTop: '20px' }} />
-                        <InfoText component="div" sx={{ fontSize: '24px', marginTop: '10px' }}>
-                            Something went wrong... <br />
-                            Your face does not match or couldn&apos;t be scanned <br />
-                            Please try again
-                        </InfoText>
-                    </>
-                )}
+                {scan === false ||
+                    (error && (
+                        <>
+                            <CancelIcon sx={{ fontSize: '75px', marginTop: '20px' }} />
+                            <InfoText component="div" sx={{ fontSize: '24px', marginTop: '10px' }}>
+                                Something went wrong... <br />
+                                Your face does not match or couldn&apos;t be scanned <br />
+                                Please try again
+                            </InfoText>
+                        </>
+                    ))}
                 <PhotoButton variant="contained" onClick={capture}>
                     Send photo
                 </PhotoButton>

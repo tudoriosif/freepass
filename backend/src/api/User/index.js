@@ -6,7 +6,7 @@ import passport from 'passport';
 
 const router = new Router();
 
-router.use(passport.authenticate('jwt', { session: false }));
+router.use(passport.authenticate(['jwtFace', 'jwtFinger', 'jwtUser'], { session: false }));
 
 router.post('/', crudService.createObject(User));
 

@@ -7,7 +7,6 @@ export const buildWSURL = (nodeNumber, port) => {
 
 export const checkClientConnection = (wss) => {
     const clientState = wss.clients?.values().next().value?._readyState; // 1 - OPEN Duplex
-    console.log(clientState);
     return clientState === WebSocket.OPEN;
 };
 

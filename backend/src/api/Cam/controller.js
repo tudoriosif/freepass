@@ -14,7 +14,7 @@ export const startTransmission = async (req, res, next) => {
         console.log('WSSCAM open!');
     });
 
-    wssCAM.onerror = (error) => console.log(error);
+    wssCAM.onerror = (error) => console.log('Error occured on wssCAM');
 
     wssCAM.on('message', function message(data) {
         wssFECAM.clients.forEach((client) => client.send(data));
@@ -24,7 +24,7 @@ export const startTransmission = async (req, res, next) => {
         console.log('WSSPIR open!');
     });
 
-    wssPIR.onerror = (error) => console.log(error);
+    wssPIR.onerror = (error) => console.log('Error occured on wssPIR');
     wssPIR.onclose = (close) => console.log('PIR was closed!');
 
     wssPIR.on('message', function message(data) {
