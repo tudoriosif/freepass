@@ -15,6 +15,7 @@ export const startTransmission = async (req, res, next) => {
     });
 
     wssCAM.onerror = (error) => console.log('Error occured on wssCAM');
+    wssCAM.onclose = (close) => console.log('wssCAM was closed!');
 
     wssCAM.on('message', function message(data) {
         wssFECAM.clients.forEach((client) => client.send(data));
