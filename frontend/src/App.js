@@ -13,6 +13,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Devices from './components/Devices/Devices';
 import Roles from './components/Roles/Roles';
 import Events from './components/Events/Events';
+import Settings from './components/Settings/Settings';
 import ProtectedRoute from './utils/ProtectedRoute';
 import { ROLES } from './constants/constants';
 
@@ -30,7 +31,7 @@ function App() {
                         <Route element={<ProtectedRoute />}>
                             <Route path="/dashboard" element={<Dashboard />} />
                             <Route path="/events" element={<Events />} />
-                            <Route path="/settings" element={<Dashboard />} />
+                            <Route path="/settings" element={<Settings />} />
                         </Route>
                     </Route>
                     <Route element={<NavLayout />}>

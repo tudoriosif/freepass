@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 export const createObject = (model) => async (req, res, next) => {
     try {
         const result = await model.create(req.body);
@@ -29,7 +31,12 @@ export const readObject = (model) => async (req, res, next) => {
 export const updateObject = (model) => async (req, res, next) => {
     try {
         const { id } = req.params;
-        const doc = await model.findOneAndUpdate({ _id: id }, { ...req.body });
+
+        const doc = await model.findOneAndUpdate(
+            { _id: mongoose.Types.ObjectId(id) },
+            { ...req.body },
+            { returnDocument: 'after' }
+        );
 
         if (!doc) {
             throw new Error(`Error updating the ${model.name}`);
@@ -39,6 +46,7 @@ export const updateObject = (model) => async (req, res, next) => {
             data: doc
         });
     } catch (error) {
+        console.log(error);
         throw new Error(error.message);
     }
 };

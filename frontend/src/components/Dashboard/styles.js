@@ -12,3 +12,11 @@ export const MiddleCardText = styled(Typography)(({ theme }) => ({
     color: theme.palette.secondary.dark,
     fontWeight: theme.typography.fontWeightLight
 }));
+
+export const NoImageBoard = styled('div')(({ theme }) => ({
+    width: '100%',
+    height: '92%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
+}));

@@ -16,7 +16,6 @@ router.put('/:id', crudService.updateObject(User));
 
 router.delete('/:id', crudService.deleteObject(User));
 
-router.get('/all', getUsersBySystem)
-
+router.get('/all', getUsersBySystem);
 
 export default router;

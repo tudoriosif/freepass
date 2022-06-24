@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import CustomDrawer from '../components/Drawer/CustomDrawer';
 import { ERRORS } from '../constants/constants';
 import ErrorHandler from './ErrorHandler';
 
@@ -13,11 +14,16 @@ const ProtectedRoute = ({ component: Component, roles, ...rest }) => {
         return <Navigate to="/" state={{ from: location }} />;
     }
 
-    if (roles && roles.indexOf(user.role) === -1) {
-        return <ErrorHandler error={ERRORS.ROLE} />;
-    }
+    // if (roles && roles.indexOf(user.role) === -1) {
+    //     return <ErrorHandler error={ERRORS.ROLE} />;
+    // }
 
-    return <Outlet />;
+    return (
+        <>
+            <Outlet />
+            {user.role === 'MAIN' && <CustomDrawer />}
+        </>
+    );
 };
 
 export default ProtectedRoute;

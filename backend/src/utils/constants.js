@@ -7,7 +7,10 @@ export const FINGER_OP = {
 export const NODE_TYPES = {
     WEB: 'webcam',
     FP: 'fingerprint',
-    AS_ARRAY: ['webcam', 'fingerprint']
+    PLATFORM: 'platform',
+    CAM: 'cam',
+    PIR: 'pir',
+    AS_ARRAY: ['webcam', 'fingerprint', 'pir', 'cam', 'platform']
 };
 
 export const EVENT_TYPES = {
@@ -17,6 +20,5 @@ export const EVENT_TYPES = {
     FINGERPRINT: 'fingerprint',
     FACE: 'face',
     LOGIN: 'login',
-    
     AS_ARRAY: ['detect', 'new_account', 'video_start', 'fingerprint', 'face', 'login']
 };

@@ -25,3 +25,5 @@ export const ERRORS = {
     ROLE: 'You do not have the right access for this page',
     BASE: 'An error has occured!'
 };
+
+export const DEVICE_TYPES = ['fingerprint', 'platform', 'cam', 'webcam', 'pir'];

@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createTransmission, closeTransmission } from '../../redux/slices/camSlice';
 
-import { ContainerStyled, MiddleCardText } from './styles.js';
+import { ContainerStyled, MiddleCardText, NoImageBoard } from './styles.js';
 
-import { useTimer } from 'react-timer-hook';
+// import { useTimer } from 'react-timer-hook';
 
 const webSocketCam = new WebSocket('ws://localhost:8000/stream_cam');
 const webSocketPIR = new WebSocket('ws://localhost:8000/pir_sensor');
@@ -30,7 +30,7 @@ webSocketPIR.onmessage = (message) => {
     console.log(message.data);
 };
 
-let fps = 0;
+// let fps = 0;
 
 const Dashboard = () => {
     const [videoURL, setVideoURL] = useState(null);
@@ -42,17 +42,17 @@ const Dashboard = () => {
     const loading = useSelector((state) => state.cam.loading);
 
     webSocketCam.onmessage = (message) => {
-        console.log(message.data); // convert to URL.createObjectURL -> image donee
+        // console.log(message.data); // convert to URL.createObjectURL -> image donee
         const url = URL.createObjectURL(message.data);
-        fps++;
+        // fps++;
         setVideoURL(url);
     };
 
-    const time = new Date();
-    time.setSeconds(time.getSeconds() + 60);
-    const { seconds, minutes, hours } = useTimer({ expiryTimestamp: time, onExpire: () => console.log(fps) });
+    // const time = new Date();
+    // time.setSeconds(time.getSeconds() + 60);
+    // const { seconds, minutes, hours } = useTimer({ expiryTimestamp: time, onExpire: () => console.log(fps) });
 
-    console.log(time, seconds, minutes, hours);
+    // console.log(time, seconds, minutes, hours);
 
     useEffect(() => {
         dispatch(createTransmission({ nodeNumber: 1 }));
@@ -63,7 +63,11 @@ const Dashboard = () => {
     return (
         <ContainerStyled maxWidth={false} disableGutters>
             <Card sx={{ width: '90%', maxWidth: '1280px', height: '90%', maxHeight: '800px' }}>
-                <CardMedia component="img" src={videoURL} height="92%" />
+                {videoURL ? (
+                    <CardMedia component="img" src={videoURL} height="92%" />
+                ) : (
+                    <NoImageBoard> No image yet!</NoImageBoard>
+                )}
                 <CardContent sx={{ textAlign: 'center' }}>
                     {!error && (
                         <Badge variant="dot" sx={{ '& > span': { backgroundColor: '#d00000' } }}>

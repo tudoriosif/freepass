@@ -22,6 +22,19 @@ export const register = createAsyncThunk(
     }
 );
 
+export const updateAccount = createAsyncThunk(
+    'user/updateAccount',
+    async ({ id, email, password }, { rejectWithValue }) => {
+        try {
+            const res = await API.put(`/users/${id}`, { email, password });
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return rejectWithValue(error?.response?.data || error);
+        }
+    }
+);
+
 export default {
     login
 };
