@@ -17,7 +17,6 @@ import { useDispatch } from 'react-redux';
 import { switchNav } from '../../redux/slices/styleSlice';
 
 const mockSystemId = 'FreePass - 001';
-const mockCurrentPage = 'Dashboard';
 
 const TopBar = () => {
     const navigate = useNavigate();
@@ -39,7 +38,7 @@ const TopBar = () => {
                         noWrap
                         component="div"
                         sx={{ flexGrow: 1, ml: 2, display: { xs: 'none', md: 'flex' } }}>
-                        {mockCurrentPage}
+                        {window.location.pathname.slice(1).charAt(0).toUpperCase() + window.location.pathname.slice(2)}
                     </PageTypography>
                     <RightBox sx={{ flexGrow: 0 }}>
                         <Tooltip title="See your system specs">

@@ -13,10 +13,13 @@ export const post = (path, data) => API.post(path, data);
 
 export const get = (path) => API.get(path);
 
+export const deleteCall = (path) => API.delete(path);
+
 export const put = (path, data) => API.put(path, data);
 
 export default {
     post,
     get,
-    put
+    put,
+    deleteCall
 };

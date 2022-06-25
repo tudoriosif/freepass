@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import crudService from '../CRUD';
 import Node from './model';
-import { getSystemNodes } from './controller';
+import { getSystemNodes, addSystemNode } from './controller';
 import passport from 'passport';
 
 const router = new Router();
@@ -9,7 +9,7 @@ const router = new Router();
 router.use(passport.authenticate(['jwtFace', 'jwtFinger' ,'jwtUser'], { session: false }));
 
 
-router.post('/', crudService.createObject(Node));
+router.post('/', addSystemNode);
 
 router.get('/', crudService.readObject(Node));
 

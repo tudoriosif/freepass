@@ -6,7 +6,7 @@ import { StyledSelect } from './style';
 import { ADD_FORMS } from './formPicker';
 
 const CustomDrawer = () => {
-    const [drawerOpen, setDrawerOpen] = useState(true);
+    const [drawerOpen, setDrawerOpen] = useState(false);
     const [componentValue, setComponentValue] = useState('device');
 
     return (
@@ -29,7 +29,6 @@ const CustomDrawer = () => {
                             onChange={(event) => setComponentValue(event.target.value)}>
                             <MenuItem value={'device'}>Device</MenuItem>
                             <MenuItem value={'user'}>User</MenuItem>
-                            <MenuItem value={'event'}>Event</MenuItem>
                         </StyledSelect>
                     </Stack>
                     {componentValue && ADD_FORMS[componentValue](setDrawerOpen)}

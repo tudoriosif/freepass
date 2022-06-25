@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container } from '@mui/material';
-import { getUsersBySystem } from '../../redux/thunks/users';
-import { pathToImage } from '../../utils/utils';
+import { Alert, Container, Snackbar } from '@mui/material';
+import { deleteUser, getUsersBySystem } from '../../redux/thunks/users';
 import ErrorHandler from '../../utils/ErrorHandler';
 import { AccountCircle, AdminPanelSettings } from '@mui/icons-material';
 import { ERRORS } from '../../constants/constants';
 
-const columns = [
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeletionModal from './DeletionModal';
+
+const getRolesColumns = (userRole, setModalOpen, setUserId) => [
     {
         field: 'avatar',
         headerName: 'Avatar',
@@ -44,23 +47,104 @@ const columns = [
         align: 'center',
         renderCell: (params) =>
             params.row.hasFinger ? <div className="green-dot"></div> : <div className="red-dot"></div>
-    }
+    },
+    ...(userRole === 'MAIN'
+        ? [
+              {
+                  field: 'noSystem',
+                  headerName: 'Stergere',
+                  align: 'center',
+                  renderCell: (params) => {
+                      console.log(params);
+                      return params.row.noSystem !== 1 ? (
+                          <IconButton
+                              aria-label="delete"
+                              size="large"
+                              color="error"
+                              onClick={() => {
+                                  setUserId(params.row.id);
+                                  setModalOpen(true);
+                              }}>
+                              <DeleteIcon fontSize="inherit" />
+                          </IconButton>
+                      ) : (
+                          <></>
+                      );
+                  }
+              }
+          ]
+        : [])
 ];
 
 const Roles = () => {
     const users = useSelector((state) => state.users.users);
+    const userRole = useSelector((state) => state.user.role);
     const loading = useSelector((state) => state.users.loading);
+    const message = useSelector((state) => state.users.message);
     const error = useSelector((state) => state.users.error);
 
+    const [modalOpen, setModalOpen] = useState(false);
+    const [snackBar, setSnackBar] = useState(false);
+    const [userId, setUserId] = useState(null);
+
     const dispatch = useDispatch();
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackBar(false);
+    };
+
+    const handleModalClick = () => {
+        !!userId && dispatch(deleteUser(userId));
+        dispatch(getUsersBySystem({}));
+        setModalOpen(false);
+    };
+
+    const handleModalCancel = () => {
+        setUserId(null);
+        setModalOpen(false);
+    };
+
     useEffect(() => {
         dispatch(getUsersBySystem({}));
     }, []);
 
+    useEffect(() => {
+        setSnackBar(!!message);
+    }, [message]);
+
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '100%', width: '90%' }}>
-            {!error && <DataGrid rows={users} columns={columns} rowHeight={70} loading={loading} />}
+            {!error && (
+                <DataGrid
+                    rows={users}
+                    columns={getRolesColumns(userRole, setModalOpen, setUserId)}
+                    rowHeight={70}
+                    loading={loading}
+                    pageSize={8}
+                />
+            )}
             {error && <ErrorHandler error={ERRORS.ROLE} />}
+            <DeletionModal
+                modalOpen={modalOpen}
+                setModalOpen={setModalOpen}
+                handleClick={handleModalClick}
+                handleCancel={handleModalCancel}
+                loading={loading}
+            />
+
+            <Snackbar
+                autoHideDuration={6000}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                open={snackBar}
+                onClose={handleClose}>
+                <Alert severity="success" sx={{ width: '100%' }}>
+                    The user has been deleted!
+                </Alert>
+            </Snackbar>
         </Container>
     );
 };

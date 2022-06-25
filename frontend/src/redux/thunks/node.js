@@ -10,3 +10,13 @@ export const getNodesBySystem = createAsyncThunk('node/getNodesBySystem', async 
         return rejectWithValue(error.response.data);
     }
 });
+
+export const addDevice = createAsyncThunk('node/addDevice', async (data, { rejectWithValue }) => {
+    try {
+        const res = await API.post('/node', data);
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        return rejectWithValue(error.response.data);
+    }
+});

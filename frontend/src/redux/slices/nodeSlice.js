@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getNodesBySystem } from '../thunks/node';
+import { getNodesBySystem, addDevice } from '../thunks/node';
 
 const initialState = {
     nodes: [],
     loading: false,
-    error: ''
+    error: '',
+    message: ''
 };
 
 const nodeSlice = createSlice({
@@ -26,6 +27,21 @@ const nodeSlice = createSlice({
             state.error = action.payload?.error;
             state.loading = false;
             state.nodes = [];
+        },
+        [addDevice.pending]: (state) => {
+            state.loading = true;
+            state.error = '';
+            state.message = '';
+        },
+        [addDevice.fulfilled]: (state, action) => {
+            state.message = action.payload?.message;
+            state.loading = false;
+            state.error = '';
+        },
+        [addDevice.rejected]: (state, action) => {
+            state.error = action.payload?.error;
+            state.loading = false;
+            state.message = '';
         }
     }
 });

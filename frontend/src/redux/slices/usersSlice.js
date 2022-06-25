@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getUsersBySystem } from '../thunks/users';
+import { getUsersBySystem, addUser, deleteUser } from '../thunks/users';
 
 const initialState = {
     users: [],
     loading: false,
-    error: ''
+    error: '',
+    message: ''
 };
 
 const usersSlice = createSlice({
@@ -26,6 +27,36 @@ const usersSlice = createSlice({
             state.error = action.payload?.error;
             state.loading = false;
             state.users = [];
+        },
+        [addUser.pending]: (state) => {
+            state.loading = true;
+            state.error = '';
+            state.message = '';
+        },
+        [addUser.fulfilled]: (state, action) => {
+            state.message = action.payload?.message;
+            state.loading = false;
+            state.error = '';
+        },
+        [addUser.rejected]: (state, action) => {
+            state.error = action.payload?.error;
+            state.loading = false;
+            state.message = '';
+        },
+        [deleteUser.pending]: (state) => {
+            state.loading = true;
+            state.error = '';
+            state.message = '';
+        },
+        [deleteUser.fulfilled]: (state, action) => {
+            state.message = action.payload?.message;
+            state.loading = false;
+            state.error = '';
+        },
+        [deleteUser.rejected]: (state, action) => {
+            state.error = action.payload?.error;
+            state.loading = false;
+            state.message = '';
         }
     }
 });

@@ -45,7 +45,7 @@ const Devices = () => {
 
     return (
         <Container maxWidth={false} disableGutters sx={{ height: '100%', width: '90%' }}>
-            {!error && <DataGrid rows={nodes} columns={columns} rowHeight={150} loading={loading} />}
+            {!error && <DataGrid rows={nodes} columns={columns} rowHeight={150} loading={loading} pageSize={8} />}
             {error && <ErrorHandler error={ERRORS.BASE} />}
         </Container>
     );

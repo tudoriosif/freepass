@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useFormik } from 'formik';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
     Checkbox,
@@ -11,15 +11,22 @@ import {
     FormHelperText,
     Stack,
     InputLabel,
-    MenuItem
+    MenuItem,
+    Alert,
+    Box
 } from '@mui/material';
 import { LoginHeader, LoginInput, LoginInputLabel, LoginStack, LoginSubHeader } from '../Login/styles';
 import { StyledSelect } from '../Drawer/style';
 import { DEVICE_TYPES } from '../../constants/constants';
 import { CustomLoadingButton, CustomOutlinedButton } from '../Settings/styles';
 import { deviceSchema } from './formValidator';
+import { addDevice } from '../../redux/thunks/node';
+import { pathToImage } from '../../utils/utils';
 
 const AddDevice = ({ setDrawerOpen }) => {
+    const error = useSelector((state) => state.node.error);
+    const message = useSelector((state) => state.node.message);
+
     const dispatch = useDispatch();
 
     const formik = useFormik({
@@ -29,7 +36,7 @@ const AddDevice = ({ setDrawerOpen }) => {
             status: false
         },
         validationSchema: deviceSchema,
-        onSubmit: (values) => console.log(values)
+        onSubmit: (values) => dispatch(addDevice(values))
     });
 
     return (
@@ -89,6 +96,13 @@ const AddDevice = ({ setDrawerOpen }) => {
                                 </MenuItem>
                             ))}
                         </StyledSelect>
+                        {!!(formik.touched.type && formik.errors.type) && (
+                            <FormHelperText
+                                id="my-helper-text"
+                                error={formik.touched.type && Boolean(formik.errors.type)}>
+                                {formik.errors.type}
+                            </FormHelperText>
+                        )}
                     </Stack>
                     <FormGroup>
                         <FormControlLabel
@@ -99,7 +113,12 @@ const AddDevice = ({ setDrawerOpen }) => {
                         />
                     </FormGroup>
                 </LoginStack>
+                <Stack sx={{ width: '70%', height: '250px', justifyContent: 'center', alignSelf: 'center' }}>
+                    <img src={pathToImage[formik.values.type]} style={{ objectFit: 'contain' }} />
+                </Stack>
                 <LoginStack sx={{ width: '100%' }}>
+                    {!!error && <Alert severity="error">An error has occured, please try again!</Alert>}
+                    {!!message && <Alert severity="success">The new device has been added!</Alert>}
                     <CustomLoadingButton color="primary" variant="contained" fullWidth type="submit">
                         Add device
                     </CustomLoadingButton>
