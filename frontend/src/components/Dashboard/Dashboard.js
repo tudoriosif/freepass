@@ -1,7 +1,9 @@
-import { Badge, Card, CardContent, CardMedia, Container } from '@mui/material';
+import { Badge, Card, CardContent, CardMedia, Container, InputLabel, MenuItem, Stack } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createTransmission, closeTransmission } from '../../redux/slices/camSlice';
+import { getAvailableCameras } from '../../redux/thunks/node';
+import { StyledSelect } from '../Drawer/style';
 
 import { ContainerStyled, MiddleCardText, NoImageBoard } from './styles.js';
 
@@ -41,6 +43,10 @@ const Dashboard = () => {
     const error = useSelector((state) => state.cam.error);
     const loading = useSelector((state) => state.cam.loading);
 
+    const availableCameras = useSelector((state) => state.node.availableCameras);
+
+    const [activeCamera, setActiveCamera] = useState(null);
+
     webSocketCam.onmessage = (message) => {
         // console.log(message.data); // convert to URL.createObjectURL -> image donee
         const url = URL.createObjectURL(message.data);
@@ -55,10 +61,20 @@ const Dashboard = () => {
     // console.log(time, seconds, minutes, hours);
 
     useEffect(() => {
-        dispatch(createTransmission({ nodeNumber: 1 }));
+        !availableCameras.length && dispatch(getAvailableCameras());
 
-        return () => dispatch(closeTransmission({ nodeNumber: 1 }));
+        return () => {
+            dispatch(closeTransmission({ nodeNumber: 1 }));
+        };
     }, []);
+
+    useEffect(() => {
+        !!availableCameras.length && setActiveCamera(availableCameras[0]);
+    }, [availableCameras]);
+
+    useEffect(() => {
+        !!activeCamera && dispatch(createTransmission({ nodeNumber: activeCamera?.addr }));
+    }, [activeCamera]);
 
     return (
         <ContainerStyled maxWidth={false} disableGutters>
@@ -76,6 +92,24 @@ const Dashboard = () => {
                     )}
                 </CardContent>
             </Card>
+            {!!availableCameras.length && !!activeCamera && (
+                <Stack sx={{ position: 'absolute', bottom: '20%' }}>
+                    <InputLabel id="select-label">Choose a camera</InputLabel>
+                    <StyledSelect
+                        labelId="select-label"
+                        value={activeCamera.name}
+                        label="component"
+                        onChange={(event) =>
+                            setActiveCamera(availableCameras.filter((camera) => camera.name === event.target.value)[0])
+                        }>
+                        {availableCameras.map((camera, index) => (
+                            <MenuItem key={index} value={camera.name}>
+                                {camera.name}
+                            </MenuItem>
+                        ))}
+                    </StyledSelect>
+                </Stack>
+            )}
         </ContainerStyled>
     );
 };

@@ -20,3 +20,13 @@ export const addDevice = createAsyncThunk('node/addDevice', async (data, { rejec
         return rejectWithValue(error.response.data);
     }
 });
+
+export const getAvailableCameras = createAsyncThunk('node/getAvailableCameras', async (_, { rejectWithValue }) => {
+    try {
+        const res = await API.get('/node/cameras');
+        return res.data;
+    } catch (error) {
+        console.log(error);
+        return rejectWithValue(error.response.data);
+    }
+});

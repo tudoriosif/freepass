@@ -25,3 +25,15 @@ export const addSystemNode = async (req, res, next) => {
         return res.status(400).send({ error: error });
     }
 };
+
+export const getAvailableCameras = async (req, res, next) => {
+    try {
+        const system = await getSystemByUser(req.user);
+
+        const availableCameras = await Node.find({ systemID: system._id, addr: { $ne: null } });
+
+        return res.status(200).json({ message: 'Available camers has been created!', availableCameras });
+    } catch (error) {
+        return res.status(400).send({ error: error });
+    }
+};

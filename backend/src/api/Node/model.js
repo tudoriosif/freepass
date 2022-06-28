@@ -20,6 +20,9 @@ const nodeSchema = new mongoose.Schema(
         status: {
             type: Boolean,
             default: true
+        },
+        addr: {
+            type: Number
         }
     },
     {

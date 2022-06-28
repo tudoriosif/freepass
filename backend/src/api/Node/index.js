@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import crudService from '../CRUD';
 import Node from './model';
-import { getSystemNodes, addSystemNode } from './controller';
+import { getSystemNodes, addSystemNode, getAvailableCameras } from './controller';
 import passport from 'passport';
 
 const router = new Router();
@@ -14,6 +14,8 @@ router.post('/', addSystemNode);
 router.get('/', crudService.readObject(Node));
 
 router.get('/system', getSystemNodes);
+
+router.get('/cameras', getAvailableCameras);
 
 router.put('/:id', crudService.updateObject(Node));
 
