@@ -28,8 +28,8 @@
 
 // Replace with your network credentials
 const char* hostname = "ESP32CAM";
-const char* ssid = "DIGI-Z6hf";
-const char* password = "0744592933";
+const char* ssid = "";
+const char* password = "";
 
 IPAddress local_ip(192, 168, 100, 20);
 IPAddress gateway(192, 168, 100, 1);
